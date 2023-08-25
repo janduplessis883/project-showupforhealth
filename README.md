@@ -1,6 +1,6 @@
 # Show Up for Health 
 
-### Introduction: Predicting Missed Appointments in Primary Care at Brompton Health PCN
+### Predicting Missed Appointments in Primary Care at Brompton Health PCN
 
 The United Kingdom's National Health Service (NHS) is a behemoth in the healthcare sector, providing primary, secondary, and tertiary care to millions of residents. With this vast reach and immense responsibility, efficient resource utilization is crucial. One aspect of resource allocation that has attracted attention over the years is missed appointments, colloquially known as "Did Not Attend" (DNA) events. These DNAs are reported to cost the NHS approximately £1 billion annually, a substantial figure that has the potential to be reduced with the right interventions.
 
@@ -14,5 +14,5 @@ By hosting this project on GitHub, we invite collaboration, scrutiny, and iterat
 
 ### The Team
 This project is part of Le Wagon London Data Sciece Course Project week.
-janduplessis883 - Project Lead
+
 

@@ -11,7 +11,7 @@ This project aims to bridge this gap. Leveraging patient data, we intend to deve
 By hosting this project on GitHub, we invite collaboration, scrutiny, and iterative improvement. Together, we can work towards a more efficient NHS and better patient care.
 
 ## Objective:
-To develop a predictive model utilizing deep learning techniques that can accurately forecast the likelihood of patients missing their primary care appointments. By considering unique features, including the Electronic Frailty Index, Obesity, Depression, DM, IMD 2023, distance from the surgery, the booking method of the consultation, length of registration with the practice, weather conditions (temperature and precipitation), and historical no-show data, this project aims to aid healthcare providers in making informed decisions and optimizing patient management.
+To develop a predictive model utilizing deep learning techniques that can accurately forecast the likelihood of patients missing their primary care appointments. By considering unique features, including the Electronic Frailty Index, Obesity, Depression, Diabetes Mellitus, Index of Multiple Depravity 2023, distance from the surgery, the booking method of the consultation, length of registration with the practice, weather conditions (temperature and precipitation), and historical no-show data, this project aims to aid healthcare providers in making informed decisions and optimizing patient management.
 
 ## Features Overview:
 **Electronic Frailty Index**: Evaluating the vulnerability of a patient, often used in primary care to predict adverse outcomes.<BR>
@@ -19,11 +19,12 @@ To develop a predictive model utilizing deep learning techniques that can accura
 **Depression**: Mental health status, which can impact appointment adherence.<BR>
 **IMD 2023**: Index of Multiple Deprivation 2023 score, giving insight into the patient's socioeconomic status.<BR>
 **Distance from Surgery**: How far the patient resides from the healthcare center, impacting ease of access.<BR>
+**Distance from station**<br>
 **Booking Method**: Whether the appointment was clinician-booked or patient-booked, potentially influencing commitment levels.<BR>
 **Length of Registration with Practice**: How long the patient has been associated with the healthcare center, indicating familiarity and potential loyalty.<BR>
 **Weather Conditions**:<BR>
-**Temperature**: To determine if extreme temperatures impact appointment attendance.<BR>
-**Precipitation**: Analyzing the impact of rain or snow on appointment adherence.<BR>
+- **Temperature**: To determine if extreme temperatures impact appointment attendance.<BR>
+- **Precipitation**: Analyzing the impact of rain or snow on appointment adherence.<BR>
 **Previous No-shows**: Historical data of missed appointments by the patient.<BR>
 
 ## Evaluation Metrics:
@@ -38,5 +39,11 @@ To develop a predictive model utilizing deep learning techniques that can accura
 **Evaluation**: Use a test dataset to assess model performance based on recall and AUC.<BR>
 **Iterative Improvements**: Refine model based on feedback loops and performance on unseen data.<BR>
 **Deployment**: Integrate the model within healthcare systems for real-time or batch predictions.
+
+## The Team:
+Jan du Plessis<BR>
+Micheal Melis<BR>
+Fabio Sparano<BR>
+Alessio Robotti<br>
 
 

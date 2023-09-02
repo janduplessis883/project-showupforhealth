@@ -36,3 +36,7 @@ uvicorn
 # tests
 httpx
 pytest-asyncio
+
+# jupiter notebook
+notebook==6.4.12
+ipython

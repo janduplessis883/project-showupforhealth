@@ -1,6 +1,9 @@
+from showupforhealth import params
+import pandas as pd
+
 
 # Function for working on the appointment time to have 1 time only
-def df_splitted():
+def df_splitted(df):
     split_df = df['Appointment time'].str.split(' - ', expand=True)  # Split the timeframes
     df['Appointment time'] = split_df[0]  # Keep 'time1' and remove 'time2'
     df['app datetime'] = pd.to_datetime(df['Appointment date'] + ' ' + df['Appointment time'])
@@ -8,7 +11,7 @@ def df_splitted():
 
 
 # Function merging the app datetime columns from two different csv files
-def merged_weather():
+def merged_weather(df):
     df_weather = pd.read_csv(WEATHER_DATA)
     df_weather['app datetime'] = pd.to_datetime(df_weather['app datetime'])
     merged_df = pd.merge(df, df_weather, on='app datetime')
@@ -17,7 +20,7 @@ def merged_weather():
 # testing
 
 # Create a new column 'Booked_by_Gp' with 1 if booked by the same clinician, else 0
-def booked_by():
+def booked_by(df):
     df['Booked_by_Gp'] = df.apply(lambda row: 1 if row['Clinician'] == row['Booked by'] else 0, axis=1)
     return df
 
@@ -203,7 +206,7 @@ def split_appointment_date(df):
 
     return df
 
- def filter_current_registration(df):
+def filter_current_registration(df):
     # Filter rows where 'Registration status' is 'Current'
     data = df[df['Registration status'] == 'Current']
 

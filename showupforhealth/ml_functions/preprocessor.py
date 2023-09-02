@@ -91,6 +91,8 @@ def one_hot_encode_columns(df, columns_to_encode):
 
 
 
+
+
 def encode_appointment_status(df):
     df['App_status_encoded'] = [0 if app_status == 'Did Not Attend' else 1 for app_status in df['Appointment status']]
     df = df.drop(columns='Appointment status')

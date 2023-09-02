@@ -29,11 +29,13 @@ def merged_weather(df):
 
 # Create a new column 'Booked_by_Gp' with 1 if booked by the same clinician, else 0
 def booked_by(df):
-    df['Booked_by_Gp'] = df.apply(lambda row: 1 if row['Clinician'] == row['Booked by'] else 0, axis=1)
+    print('🔅 Encoded booked_by_clinician')
+    df['booked_by_clinician'] = df.apply(lambda row: 1 if row['Clinician'] == row['Booked by'] else 0, axis=1)
     return df
 
 
 def hash_patient_id(df, length=8):
+    print('🈯️ Hash Patinet ID')
     df['Patient ID'] = df['Patient ID'].apply(lambda x: hashlib.sha512(str(x).encode('utf-8')).hexdigest()[:length])
     return df
 
@@ -94,16 +96,19 @@ def one_hot_encode_columns(df, columns_to_encode):
 # mtesting 
 
 def encode_appointment_status(df):
+    print('🔅 Encoded appointment_status')
     df['App_status_encoded'] = [0 if app_status == 'Did Not Attend' else 1 for app_status in df['Appointment status']]
     df = df.drop(columns='Appointment status')
     return df
 
 def encode_hour_appointment(df):
+    print('🔀 Encoded appointment hour')
     df['Hour_of_appointment'] = df['Appointment time'].str[:2].astype(int)
     df.drop(columns=['Appointment time'], inplace=True)
     return df
 
 def group_ethnicity_categories(df):
+    print('👨‍⚕️ Map Ethnical Categories')
     ethnicity_dict = {'African': 'Black',
                       'Other Black': 'Black',
                       'Caribbean': 'Black',
@@ -124,6 +129,7 @@ def group_ethnicity_categories(df):
     return df
 
 def ohe_ethnicity(df):
+    print('🔀 OHE Ethnical categories')
     df = df.rename(columns={'Ethnicity category': 'Ethnicity'})
     ohe = OneHotEncoder(sparse_output=False)
     ohe.fit(df[['Ethnicity']])
@@ -133,12 +139,14 @@ def ohe_ethnicity(df):
 
 # Jan pre-processor Functions
 def format_datetime_columms(df):
+    print('💾 Format datetime columns')
     date_list = ['Appointment booked date','Appointment date','Registration date']
     for date in date_list:
         df[date] = pd.to_datetime(df[date])
     return df
 
 def months_registered(df):
+    print('🔀 Processing months registered')
     # Calculate the difference between two dates
     df['delta'] = df['Appointment date'] - df['Registration date']
 
@@ -151,6 +159,7 @@ def months_registered(df):
     return df
 
 def extract_rota_type(text):
+    print('🔀 Extract Rota type')
     # HOW TO APPLY IT
     # Apply extract_role function and overwrite Rota type column
     # full_appointments['Rota type'] = full_appointments['Rota type'].apply(extract_rota_type)
@@ -168,6 +177,7 @@ def extract_rota_type(text):
     return 'DROP'
 
 def map_rota_type(df):
+    print('📍 map rota type')
     df['Rota type'] = df['Rota type'].map(extract_rota_type)
 
     boolean_mask = (df['Rota type'] != 'DROP')
@@ -179,6 +189,7 @@ def map_rota_type(df):
 
 # Label Encode Sex
 def labelencode_sex(df):
+    print('🏷️ Labelencode Sex')
     le = LabelEncoder()
     df['Sex'] = le.fit_transform(df['Sex'])
 
@@ -201,38 +212,6 @@ def filter_current_registration(df):
 
     return df
 
-#calculate BMI and encode depression
-def process_dataframe(df):
-    # Check if HEIGHT and WEIGHT columns have been cleaned
-    if not df['WEIGHT'].dtype == float:
-        # Clean the WEIGHT column
-        def clean_weight(weight_str):
-            if isinstance(weight_str, str):
-                match = re.search(r'\d+', weight_str)
-                if match:
-                    return float(match.group())
-            return None
-
-        df['WEIGHT'] = df['WEIGHT'].apply(clean_weight)
-
-    if not df['HEIGHT'].dtype == float:
-        # Clean the HEIGHT column
-        def clean_height(height_str):
-            if isinstance(height_str, str):
-                match = re.search(r'\d+\.\d+', height_str)
-                if match:
-                    return float(match.group())
-            return None
-
-        df['HEIGHT'] = df['HEIGHT'].apply(clean_height)
-
-    # Calculate BMI
-    df['BMI'] = (df['WEIGHT'] / (df['HEIGHT'] ** 2))
-
-    # Create the 'depr' column
-    df['depr'] = df['Depression'].apply(lambda x: 1 if isinstance(x, str) and re.search(r'\S', x) else 0)
-
-    return df
 
 # days until appointment function
 def calculate_days_difference(df):

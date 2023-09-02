@@ -39,3 +39,4 @@ httpx
 pytest-asyncio
 tpot
 imblearn
+black

@@ -37,6 +37,14 @@ uvicorn
 # tests
 httpx
 pytest-asyncio
+
+# jupiter notebook
+notebook==6.4.12
+ipython
 tpot
 imblearn
+<<<<<<< HEAD
 black
+=======
+
+>>>>>>> 2b7d66c20be1235dae815e276c8a094d5e2b24cd

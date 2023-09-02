@@ -23,27 +23,38 @@ def booked_by():
 
 import hashlib
 
-# Function to hash values using SHA-256 and truncate the result
-def hash_and_truncate(value, length=8):
-    # Convert the value to a string
-    value_str = str(value)
 
-    # Create a hash object using SHA-256
-    sha256 = hashlib.sha256()
 
-    # Update the hash object with the value
-    sha256.update(value_str.encode('utf-8'))
+import hashlib
 
-    # Get the hexadecimal representation of the hash and truncate it
-    hashed_value = sha256.hexdigest()[:length]
+def hash_patient_id(df, length=8):
+    df['Patient ID'] = df['Patient ID'].apply(lambda x: hashlib.sha512(str(x).encode('utf-8')).hexdigest()[:length])
+    return df
 
-    return hashed_value
+hash_patient_id(df)
 
-# Apply the hash function to the 'Patient_ID' column and create a new 'Hashed_Patient_ID' column
-df['Hashed Patient ID'] = df['Patient ID'].apply(hash_and_truncate)
 
-# Drop the original 'Patient_ID' column if you no longer need it
-df.drop(columns=['Patient ID'], inplace=True)
+# # Function to hash values using SHA-256 and truncate the result
+# def hash_and_truncate(value, length=8):
+#     # Convert the value to a string
+#     value_str = str(value)
+
+#     # Create a hash object using SHA-256
+#     sha256 = hashlib.sha256()
+
+#     # Update the hash object with the value
+#     sha256.update(value_str.encode('utf-8'))
+
+#     # Get the hexadecimal representation of the hash and truncate it
+#     hashed_value = sha256.hexdigest()[:length]
+
+#     return hashed_value
+
+# # Apply the hash function to the 'Patient_ID' column and create a new 'Hashed_Patient_ID' column
+# df['Hashed Patient ID'] = df['Patient ID'].apply(hash_and_truncate)
+
+# # Drop the original 'Patient_ID' column if you no longer need it
+# df.drop(columns=['Patient ID'], inplace=True)
 
 
 from sklearn.preprocessing import OneHotEncoder
@@ -80,10 +91,10 @@ columns_to_encode = ['Rota type', 'Ethnicity category', 'Language']
 # Call the function to perform One-Hot Encoding
 df_encoded = one_hot_encode_columns(df, columns_to_encode)
 
-# Import Libriries 
+# Import Libriries
 import re
 import matplotlib.pyplot as plt
-import pandas as pd 
+import pandas as pd
 import numpy as np
 import seaborn as sns
 from sklearn.preprocessing import LabelEncoder
@@ -136,11 +147,11 @@ def format_datetime_columms(df):
 def months_registered(df):
     # Calculate the difference between two dates
     df['delta'] = df['Appointment date'] - df['Registration date']
-    
+
     # Convert Timedelta to months
     df['months_registered'] = df['delta'].dt.total_seconds() / (60*60*24*30.44)
     df['months_registered'] = np.ceil(df['months_registered'])
-    
+
     # Drop the temporary 'delta' column
     df.drop(columns=['delta'], inplace=True)
     return df
@@ -148,10 +159,10 @@ def months_registered(df):
 def extract_rota_type(text):
     # HOW TO APPLY IT
     # Apply extract_role function and overwrite Rota type column
-    # full_appointments['Rota type'] = full_appointments['Rota type'].apply(extract_rota_type)     
+    # full_appointments['Rota type'] = full_appointments['Rota type'].apply(extract_rota_type)
     role_map = {
     'GP': ['GP', 'Registrar', 'Urgent', 'Telephone', '111', 'FY2', 'F2', 'Extended Hours', 'GP Clinic', 'Session'],
-    'Nurse': ['Nurse', 'Nurse Practitioner'], 
+    'Nurse': ['Nurse', 'Nurse Practitioner'],
     'HCA': ['HCA','Health Care Assistant', 'Phlebotomy'],
     'ARRS': ['Pharmacist', 'Paramedic', 'Physiotherapist', 'Physicians Associate', 'ARRS', 'PCN'],
     }
@@ -164,19 +175,19 @@ def extract_rota_type(text):
 
 def map_rota_type(df):
     df['Rota type'] = df['Rota type'].map(extract_rota_type)
-    
+
     boolean_mask = (df['Rota type'] != 'DROP')
     # Applying the boolean filteraing
     df = df[boolean_mask].reset_index(drop=True)
     df.reset_index(inplace=True, drop=True)
-    
+
     return df
 
 # Label Encode Sex
 def labelencode_sex(df):
     le = LabelEncoder()
     df['Sex'] = le.fit_transform(df['Sex'])
-    
+
     return df
 
 def split_appointment_date(df):
@@ -188,12 +199,12 @@ def split_appointment_date(df):
     df['Week'] = df['Appointment date'].dt.isocalendar().week  # 1-52
     df['Month'] = df['Appointment date'].dt.month  # 1-12 (January to December)
 
-    return df 
+    return df
 
  def filter_current_registration(df):
     # Filter rows where 'Registration status' is 'Current'
     data = df[df['Registration status'] == 'Current']
-    
+
     return df
 
 #calculate BMI and encode depression
@@ -237,9 +248,8 @@ def calculate_days_difference(df):
 
     # Calculate the difference in days and create a new column
     df['Days Difference'] = (df['Appointment date'] - df['Appointment booked date']).dt.days
-    
+
     # Drop rows where 'Days Difference' is negative
     df = df[df['Days Difference'] >= 0]
 
     return df
-

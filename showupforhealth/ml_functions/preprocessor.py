@@ -20,29 +20,16 @@ def booked_by():
     df['Booked_by_Gp'] = df.apply(lambda row: 1 if row['Clinician'] == row['Booked by'] else 0, axis=1)
     return df
 
+
+# Function to hash patients IDs
 import hashlib
 
-# Function to hash values using SHA-256 and truncate the result
-def hash_and_truncate(value, length=8):
-    # Convert the value to a string
-    value_str = str(value)
+def hash_patient_id(df, length=8):
+    df['Patient ID'] = df['Patient ID'].apply(lambda x: hashlib.sha512(str(x).encode('utf-8')).hexdigest()[:length])
+    return df
 
-    # Create a hash object using SHA-256
-    sha256 = hashlib.sha256()
+hash_patient_id(df)
 
-    # Update the hash object with the value
-    sha256.update(value_str.encode('utf-8'))
-
-    # Get the hexadecimal representation of the hash and truncate it
-    hashed_value = sha256.hexdigest()[:length]
-
-    return hashed_value
-
-# Apply the hash function to the 'Patient_ID' column and create a new 'Hashed_Patient_ID' column
-df['Hashed Patient ID'] = df['Patient ID'].apply(hash_and_truncate)
-
-# Drop the original 'Patient_ID' column if you no longer need it
-df.drop(columns=['Patient ID'], inplace=True)
 
 
 from sklearn.preprocessing import OneHotEncoder

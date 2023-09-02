@@ -21,6 +21,8 @@ def booked_by():
     df['Booked_by_Gp'] = df.apply(lambda row: 1 if row['Clinician'] == row['Booked by'] else 0, axis=1)
     return df
 
+
+# Function to hash patients IDs
 import hashlib
 
 

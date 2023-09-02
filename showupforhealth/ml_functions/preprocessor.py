@@ -72,7 +72,7 @@ def split_appointment_date(df):
 
     return df 
 
- def filter_current_registration(df):
+def filter_current_registration(df):
     # Filter rows where 'Registration status' is 'Current'
     data = df[df['Registration status'] == 'Current']
     

@@ -1,5 +1,14 @@
+# Import Libriries
+import re
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+import seaborn as sns
+from sklearn.preprocessing import LabelEncoder
 from showupforhealth import params
 import pandas as pd
+import hashlib
+from sklearn.preprocessing import OneHotEncoder
 
 
 # Function for working on the appointment time to have 1 time only
@@ -17,7 +26,6 @@ def merged_weather(df):
     merged_df = pd.merge(df, df_weather, on='app datetime')
     return merged_df
 
-# testing
 
 # Create a new column 'Booked_by_Gp' with 1 if booked by the same clinician, else 0
 def booked_by(df):
@@ -25,18 +33,9 @@ def booked_by(df):
     return df
 
 
-# Function to hash patients IDs
-import hashlib
-
-
-
-import hashlib
-
 def hash_patient_id(df, length=8):
     df['Patient ID'] = df['Patient ID'].apply(lambda x: hashlib.sha512(str(x).encode('utf-8')).hexdigest()[:length])
     return df
-
-hash_patient_id(df)
 
 
 # # Function to hash values using SHA-256 and truncate the result
@@ -62,7 +61,7 @@ hash_patient_id(df)
 # df.drop(columns=['Patient ID'], inplace=True)
 
 
-from sklearn.preprocessing import OneHotEncoder
+
 
 def one_hot_encode_columns(df, columns_to_encode):
     """
@@ -90,19 +89,9 @@ def one_hot_encode_columns(df, columns_to_encode):
 
     return df
 
-# Columns to One-Hot Encode
-columns_to_encode = ['Rota type', 'Ethnicity category', 'Language']
 
-# Call the function to perform One-Hot Encoding
-df_encoded = one_hot_encode_columns(df, columns_to_encode)
 
-# Import Libriries
-import re
-import matplotlib.pyplot as plt
-import pandas as pd
-import numpy as np
-import seaborn as sns
-from sklearn.preprocessing import LabelEncoder
+# mtesting 
 
 def encode_appointment_status(df):
     df['App_status_encoded'] = [0 if app_status == 'Did Not Attend' else 1 for app_status in df['Appointment status']]
@@ -258,3 +247,10 @@ def calculate_days_difference(df):
     df = df[df['Days Difference'] >= 0]
 
     return df
+
+
+
+
+
+    
+    

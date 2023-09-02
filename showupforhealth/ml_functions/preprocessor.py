@@ -246,3 +246,9 @@ def calculate_days_difference(df):
 
     return df
 
+
+
+
+
+    
+    

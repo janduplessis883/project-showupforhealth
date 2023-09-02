@@ -37,3 +37,4 @@ uvicorn
 # tests
 httpx
 pytest-asyncio
+tpot

@@ -1,6 +1,9 @@
+from showupforhealth import params
+import pandas as pd
+
 
 # Function for working on the appointment time to have 1 time only
-def df_splitted():
+def df_splitted(df):
     split_df = df['Appointment time'].str.split(' - ', expand=True)  # Split the timeframes
     df['Appointment time'] = split_df[0]  # Keep 'time1' and remove 'time2'
     df['app datetime'] = pd.to_datetime(df['Appointment date'] + ' ' + df['Appointment time'])
@@ -8,7 +11,7 @@ def df_splitted():
 
 
 # Function merging the app datetime columns from two different csv files
-def merged_weather():
+def merged_weather(df):
     df_weather = pd.read_csv(WEATHER_DATA)
     df_weather['app datetime'] = pd.to_datetime(df_weather['app datetime'])
     merged_df = pd.merge(df, df_weather, on='app datetime')
@@ -17,33 +20,46 @@ def merged_weather():
 # testing
 
 # Create a new column 'Booked_by_Gp' with 1 if booked by the same clinician, else 0
-def booked_by():
+def booked_by(df):
     df['Booked_by_Gp'] = df.apply(lambda row: 1 if row['Clinician'] == row['Booked by'] else 0, axis=1)
     return df
 
+
+# Function to hash patients IDs
 import hashlib
 
-# Function to hash values using SHA-256 and truncate the result
-def hash_and_truncate(value, length=8):
-    # Convert the value to a string
-    value_str = str(value)
 
-    # Create a hash object using SHA-256
-    sha256 = hashlib.sha256()
 
-    # Update the hash object with the value
-    sha256.update(value_str.encode('utf-8'))
+import hashlib
 
-    # Get the hexadecimal representation of the hash and truncate it
-    hashed_value = sha256.hexdigest()[:length]
+def hash_patient_id(df, length=8):
+    df['Patient ID'] = df['Patient ID'].apply(lambda x: hashlib.sha512(str(x).encode('utf-8')).hexdigest()[:length])
+    return df
 
-    return hashed_value
+hash_patient_id(df)
 
-# Apply the hash function to the 'Patient_ID' column and create a new 'Hashed_Patient_ID' column
-df['Hashed Patient ID'] = df['Patient ID'].apply(hash_and_truncate)
 
-# Drop the original 'Patient_ID' column if you no longer need it
-df.drop(columns=['Patient ID'], inplace=True)
+# # Function to hash values using SHA-256 and truncate the result
+# def hash_and_truncate(value, length=8):
+#     # Convert the value to a string
+#     value_str = str(value)
+
+#     # Create a hash object using SHA-256
+#     sha256 = hashlib.sha256()
+
+#     # Update the hash object with the value
+#     sha256.update(value_str.encode('utf-8'))
+
+#     # Get the hexadecimal representation of the hash and truncate it
+#     hashed_value = sha256.hexdigest()[:length]
+
+#     return hashed_value
+
+# # Apply the hash function to the 'Patient_ID' column and create a new 'Hashed_Patient_ID' column
+# df['Hashed Patient ID'] = df['Patient ID'].apply(hash_and_truncate)
+
+# # Drop the original 'Patient_ID' column if you no longer need it
+# df.drop(columns=['Patient ID'], inplace=True)
 
 
 from sklearn.preprocessing import OneHotEncoder

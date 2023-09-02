@@ -38,3 +38,4 @@ uvicorn
 httpx
 pytest-asyncio
 tpot
+imblearn

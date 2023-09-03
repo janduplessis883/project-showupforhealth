@@ -4,7 +4,7 @@ from showupforhealth.params import *
 from showupforhealth.ml_functions.encoders import haversine_distance
 
 def make_global_disease_register(surgery_list = ['ECS', 'TCP', 'TGP', 'SMW', 'KMC', 'HPVM']):
-    print('=== Preparing Global Disease Register + IMD2023 info =====================================================')
+    print('‼️ Preparing Global Disease Register + IMD2023 info ====================================')
 
     disease_register = []
     for surgery in surgery_list:
@@ -33,7 +33,7 @@ def make_global_disease_register(surgery_list = ['ECS', 'TCP', 'TGP', 'SMW', 'KM
                     .merge(smi, how='left', on='Patient ID')
                     .fillna(0)
                     )
-        print(f'💊 {surgery} Disease Register completed')
+        print(f'💊 {surgery} Disease Register completed', end=" ")
         # Add IMD and distance from station
         imd = pd.read_csv(IMD_DATA)
 

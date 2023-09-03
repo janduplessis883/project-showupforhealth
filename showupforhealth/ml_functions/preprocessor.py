@@ -10,6 +10,8 @@ import pandas as pd
 import hashlib
 from sklearn.preprocessing import OneHotEncoder
 
+from showupforhealth.params import *
+
 
 # Function for working on the appointment time to have 1 time only
 def df_splitted(df):
@@ -29,13 +31,13 @@ def merged_weather(df):
 
 # Create a new column 'Booked_by_Gp' with 1 if booked by the same clinician, else 0
 def booked_by(df):
-    print('🔅 Encoded booked_by_clinician')
+    print('📙 Booked by Clinician')
     df['booked_by_clinician'] = df.apply(lambda row: 1 if row['Clinician'] == row['Booked by'] else 0, axis=1)
     return df
 
 
 def hash_patient_id(df, length=8):
-    print('🈯️ Hash Patinet ID')
+    print('🚯 Hash Patient ID')
     df['Patient ID'] = df['Patient ID'].apply(lambda x: hashlib.sha512(str(x).encode('utf-8')).hexdigest()[:length])
     return df
 
@@ -65,7 +67,8 @@ def hash_patient_id(df, length=8):
 
 
 
-def one_hot_encode_columns(df, columns_to_encode):
+def one_hot_encode_columns(df, columns_to_encode=['Ethnicity Category', 'Rota type']):
+    print('🔥 OHE Columns')
     """
     Perform One-Hot Encoding on specified columns in a DataFrame.
 
@@ -91,24 +94,22 @@ def one_hot_encode_columns(df, columns_to_encode):
 
     return df
 
-
-
 # mtesting 
 
 def encode_appointment_status(df):
-    print('🔅 Encoded appointment_status')
+    print('🔠 Encode Appointment status')
     df['App_status_encoded'] = [0 if app_status == 'Did Not Attend' else 1 for app_status in df['Appointment status']]
     df = df.drop(columns='Appointment status')
     return df
 
 def encode_hour_appointment(df):
-    print('🔀 Encoded appointment hour')
+    print('🕣 Extract Time of Appointment')
     df['Hour_of_appointment'] = df['Appointment time'].str[:2].astype(int)
     df.drop(columns=['Appointment time'], inplace=True)
     return df
 
 def group_ethnicity_categories(df):
-    print('👨‍⚕️ Map Ethnical Categories')
+    print('🤦🏽‍♂️ Mapping Ethnicity Category')
     ethnicity_dict = {'African': 'Black',
                       'Other Black': 'Black',
                       'Caribbean': 'Black',
@@ -129,7 +130,7 @@ def group_ethnicity_categories(df):
     return df
 
 def ohe_ethnicity(df):
-    print('🔀 OHE Ethnical categories')
+    print('🔥 OHE Ethnicity')
     df = df.rename(columns={'Ethnicity category': 'Ethnicity'})
     ohe = OneHotEncoder(sparse_output=False)
     ohe.fit(df[['Ethnicity']])
@@ -139,14 +140,14 @@ def ohe_ethnicity(df):
 
 # Jan pre-processor Functions
 def format_datetime_columms(df):
-    print('💾 Format datetime columns')
+    print('🕣 Convert Datetime Columns')
     date_list = ['Appointment booked date','Appointment date','Registration date']
     for date in date_list:
         df[date] = pd.to_datetime(df[date])
     return df
 
 def months_registered(df):
-    print('🔀 Processing months registered')
+    print('📅 Months Registered with practice')
     # Calculate the difference between two dates
     df['delta'] = df['Appointment date'] - df['Registration date']
 
@@ -159,7 +160,6 @@ def months_registered(df):
     return df
 
 def extract_rota_type(text):
-    print('🔀 Extract Rota type')
     # HOW TO APPLY IT
     # Apply extract_role function and overwrite Rota type column
     # full_appointments['Rota type'] = full_appointments['Rota type'].apply(extract_rota_type)
@@ -177,7 +177,7 @@ def extract_rota_type(text):
     return 'DROP'
 
 def map_rota_type(df):
-    print('📍 map rota type')
+    print('🗺️ Map Rota types')
     df['Rota type'] = df['Rota type'].map(extract_rota_type)
 
     boolean_mask = (df['Rota type'] != 'DROP')
@@ -189,13 +189,14 @@ def map_rota_type(df):
 
 # Label Encode Sex
 def labelencode_sex(df):
-    print('🏷️ Labelencode Sex')
+    print('🏷️ Labelencoding Sex')
     le = LabelEncoder()
     df['Sex'] = le.fit_transform(df['Sex'])
 
     return df
 
 def split_appointment_date(df):
+    print('⌚️ Split appointment date')
     # Convert the "Appointment date" column to datetime if it's not already
     df['Appointment date'] = pd.to_datetime(df['Appointment date'], format='%d-%b-%y')
 
@@ -207,6 +208,7 @@ def split_appointment_date(df):
     return df
 
 def filter_current_registration(df):
+    print('💧 Deseased and deducted')
     # Filter rows where 'Registration status' is 'Current'
     data = df[df['Registration status'] == 'Current']
 
@@ -215,6 +217,7 @@ def filter_current_registration(df):
 
 # days until appointment function
 def calculate_days_difference(df):
+    print('📅 Months Registered with practice')
     # Convert the date columns to datetime objects
     df['Appointment booked date'] = pd.to_datetime(df['Appointment booked date'], format='%d-%b-%y')
     df['Appointment date'] = pd.to_datetime(df['Appointment date'], format='%d-%b-%y')
@@ -225,6 +228,22 @@ def calculate_days_difference(df):
     # Drop rows where 'Days Difference' is negative
     df = df[df['Days Difference'] >= 0]
 
+    return df
+
+
+def feature_engeneering(df):
+    print('- Feature Engineering......')
+    booked_by(df)
+    encode_appointment_status(df)
+    hash_patient_id(df)
+    group_ethnicity_categories(df)
+    format_datetime_columms(df)
+    months_registered(df)
+    map_rota_type(df)
+    labelencode_sex(df)
+    filter_current_registration(df)
+    calculate_days_difference(df)
+    one_hot_encode_columns(df)
     return df
 
 

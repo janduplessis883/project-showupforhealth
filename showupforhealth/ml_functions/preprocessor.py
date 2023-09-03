@@ -53,7 +53,7 @@ def hash_patient_id(df, length=8):
 
 
 
-def one_hot_encode_columns(df, columns_to_encode=['Rota type']):
+def one_hot_encode_columns(df, columns_to_encode=['Rota']):
     print('➡️ OHE Columns')
     """
     Perform One-Hot Encoding on specified columns in a DataFrame.
@@ -165,12 +165,11 @@ def extract_rota_type(text):
 def map_rota_type(df):
     print('➡️ Map Rota types - renamed Rota')
     df['Rota type'] = df['Rota type'].map(extract_rota_type)
+    
+    df.drop(df[df['Rota type'] == 'DROP'].index, inplace=True)
 
-    boolean_mask = (df['Rota type'] != 'DROP')
-    # Applying the boolean filteraing
-    df = df[boolean_mask].reset_index(drop=True)
-    df.reset_index(inplace=True, drop=True)
-    df.rename(columns={'Rota type': 'Rota'}, inplace=True)
+    # Rename column
+    df.rename(columns={'Rota type':'Rota'}, inplace=True)
 
     return df
 
@@ -219,7 +218,7 @@ def calculate_days_difference(df):
 
 def drop_rename_columns(df):
     print('➡️ Drop and rename columns')
-    df.drop(columns=['Postcode','Latitude','Longitude'], inplace=True)
+    df.drop(columns=['Postcode','Latitude','Longitude', 'Appointment booked date', 'Appointment status', 'Registration date'], inplace=True)
     df.rename(columns={'Age in years': 'Age'}, inplace=True)
     return df
 
@@ -233,6 +232,8 @@ def feature_engeneering(df):
     months_registered(df)
     map_rota_type(df)
     labelencode_sex(df)
+    encode_hour_appointment(df)
+    split_appointment_date(df)
     filter_current_registration(df)
     calculate_days_difference(df)
     one_hot_encode_columns(df)

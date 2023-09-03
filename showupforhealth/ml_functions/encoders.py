@@ -1,5 +1,5 @@
 import math
-import pandas as pd
+import re
 
 def haversine_distance(surgery_prefix, lat2, lon2):
     R = 6371.0  # Radius of the Earth in kilometers
@@ -34,3 +34,20 @@ def haversine_distance(surgery_prefix, lat2, lon2):
 
     distance = R * c
     return distance  # in kilometers
+
+def extract_rota_type(text):
+    # HOW TO APPLY IT
+    # Apply extract_role function and overwrite Rota type column
+    # full_appointments['Rota type'] = full_appointments['Rota type'].apply(extract_rota_type)
+    role_map = {
+    'GP': ['GP', 'Registrar', 'Urgent', 'Telephone', '111', 'FY2', 'F2', 'Extended Hours', 'GP Clinic', 'Session'],
+    'Nurse': ['Nurse', 'Nurse Practitioner'],
+    'HCA': ['HCA','Health Care Assistant', 'Phlebotomy'],
+    'ARRS': ['Pharmacist', 'Paramedic', 'Physiotherapist', 'Physicians Associate', 'ARRS', 'PCN'],
+    }
+
+    for role, patterns in role_map.items():
+        for pattern in patterns:
+            if re.search(pattern, text):
+                return role
+    return 'DROP'

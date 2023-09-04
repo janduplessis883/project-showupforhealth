@@ -30,29 +30,35 @@ def hash_patient_id(df, length=8):
 
 hash_patient_id(df)
 
-
-
 from sklearn.preprocessing import OneHotEncoder
 
-def one_hot_encode_columns(df, columns_to_encode):
+def one_hot_encode_columns(df, columns_to_encode=['Rota type', 'Ethnicity category', 'Language']):
     """
     Perform One-Hot Encoding on specified columns in a DataFrame.
 
     Parameters:
         df (pd.DataFrame): The input DataFrame.
-        columns_to_encode (list): List of column names to One-Hot Encode.
+        columns_to_encode (list): List of column names to OneHot Encode.
 
     Returns:
-        pd.DataFrame: A new DataFrame with One-Hot Encoded columns and original columns dropped.
+        pd.DataFrame: A new DataFrame with OneHot Encoded columns and original columns dropped.
     """
     # Create an instance of OneHotEncoder
     encoder = OneHotEncoder()
 
-    # Fit the encoder to the specified categorical columns and transform the data
-    encoded_data = encoder.fit_transform(df[columns_to_encode])
+    # Initialize an empty DataFrame to store the encoded columns
+    encoded_df = pd.DataFrame()
 
-    # Convert the result to a DataFrame
-    encoded_df = pd.DataFrame(encoded_data.toarray(), columns=encoder.get_feature_names_out(columns_to_encode))
+    # Loop over the columns to encode
+    for column in columns_to_encode:
+        # Fit the encoder to the current column and transform the data
+        encoded_data = encoder.fit_transform(df[[column]])
+
+        # Convert the result to a DataFrame and add it to the encoded DataFrame
+        encoded_df = pd.concat([
+            encoded_df,
+            pd.DataFrame(encoded_data.toarray(), columns=encoder.get_feature_names_out([column]))
+        ], axis=1)
 
     # Concatenate the encoded DataFrame with the original DataFrame, dropping the original columns
     df = pd.concat([df, encoded_df], axis=1)
@@ -60,8 +66,5 @@ def one_hot_encode_columns(df, columns_to_encode):
 
     return df
 
-# Columns to One-Hot Encode
-columns_to_encode = ['Rota type', 'Ethnicity category', 'Language']
 
-# Call the function to perform One-Hot Encoding
-df_encoded = one_hot_encode_columns(df, columns_to_encode)
+

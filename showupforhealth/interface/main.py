@@ -1,6 +1,9 @@
+from showupforhealth.params import *
+
+
 def hello():
-    print("Hello, I am ⭐️ Project-Nmae")
+    print("\nHello, I am 🍏ShowUpforHealth")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     hello()

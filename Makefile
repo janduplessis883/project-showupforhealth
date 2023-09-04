@@ -12,9 +12,18 @@ clean:
 
 all: install clean
 
+# Build Disese_register only for use when building prediction dataset
+disease_register:
+	python showupforhealth/ml_functions/disease_register.py
+
+# Build full pre-processed traing dataset
+data:
+	python showupforhealth/ml_functions/data.py
+
+
 test:
 	@pytest -v tests
 
 # Specify package name
 lint:
-	@black package/
+	@black showupforhealth/

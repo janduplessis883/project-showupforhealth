@@ -6,6 +6,7 @@ import pandas as pd
 import hashlib
 from sklearn.preprocessing import OneHotEncoder
 from datetime import datetime
+import time
 
 from showupforhealth.params import *
 from showupforhealth.ml_functions.encoders import extract_rota_type
@@ -13,7 +14,7 @@ from showupforhealth.ml_functions.encoders import extract_rota_type
 
 # Create a new column 'Booked_by_Gp' with 1 if booked by the same clinician, else 0
 def booked_by_clinicain(df):
-    print("➡️ Booked by Clinician")
+    print("➡️ Encoded Booked by Clinician")
     df["booked_by_clinician"] = df.apply(
         lambda row: 1 if row["Clinician"] == row["Booked by"] else 0, axis=1
     )
@@ -111,7 +112,7 @@ def format_datetime_columms(df):
 
 
 def months_registered(df):
-    print("➡️ Months Registered with practice")
+    print("➡️ Calculate months registered with practice")
     # Calculate the difference between two dates
     df["delta"] = df["Appointment date"] - df["Registration date"]
 
@@ -143,7 +144,7 @@ def labelencode_sex(df):
 
 
 def split_appointment_date(df):
-    print("➡️ Split appointment date")
+    print("➡️ Split appointment date: week, months, day_of_week")
     # Convert the "Appointment date" column to datetime if it's not already
     df["Appointment date"] = pd.to_datetime(df["Appointment date"], format="%d-%b-%y")
 
@@ -155,15 +156,17 @@ def split_appointment_date(df):
 
 
 def filter_current_registration(df):
-    print("➡️ Deseased and deducted")
+    print("➡️ Drop deseased and deducted")
     # Filter rows where 'Registration status' is 'Current'
-    df = df[df["Registration status"] == "Current"]
+    df.drop(df[df["Registration status"] == "Deceased, Deducted"].index, inplace=True)
+    df.drop(df[df["Registration status"] == "Deceased"].index, inplace=True)
+    df.drop(df[df["Registration status"] == "Deducted"].index, inplace=True)
     return df
 
 
 # days until appointment function
 def calculate_days_difference(df):
-    print("➡️ Months Registered with practice")
+    print("➡️ Calculate how long before appointment date booked")
     # Convert the date columns to datetime objects
     df["Appointment booked date"] = pd.to_datetime(
         df["Appointment booked date"], format="%d-%b-%y"
@@ -190,6 +193,7 @@ def drop_rename_columns(df):
             "Appointment booked date",
             "Appointment status",
             "Registration date",
+            "Registration status",
         ],
         inplace=True,
     )
@@ -198,9 +202,11 @@ def drop_rename_columns(df):
 
 
 def feature_engeneering(df):
+    start_time = time.time()
     print(
-        "‼️ == Feature Engineering ================================================================="
+        "\n==== Feature Engineering ====================================================="
     )
+    print(f"👉 Input shape {df.shape}")
     format_datetime_columms(df)
     booked_by_clinicain(df)
     hash_patient_id(df)
@@ -215,4 +221,8 @@ def feature_engeneering(df):
     calculate_days_difference(df)
     one_hot_encode_columns(df)
     drop_rename_columns(df)
+    print("💾 Saving to output_data/full_train_data.csv...")
+    df.to_csv(f"{OUTPUT_DATA}full_train_data.csv", index=False)
+    end_time = time.time()
+    print(f"✅ Done in {round((end_time - start_time),2)} sec {df.shape}")
     return df

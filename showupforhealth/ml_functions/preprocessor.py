@@ -32,32 +32,29 @@ def hash_patient_id(df, length=8):
     return df
 
 
-def one_hot_encode_columns(df, columns_to_encode=["Rota"]):
+def one_hot_encode_columns(df, columns_to_encode=['Rota type', 'Ethnicity category']):
     print("➡️ OHE Columns")
-    """
-    Perform One-Hot Encoding on specified columns in a DataFrame.
 
-    Parameters:
-        df (pd.DataFrame): The input DataFrame.
-        columns_to_encode (list): List of column names to One-Hot Encode.
+    # Iterate over non-numeric columns
+    for column in columns_to_encode:
 
-    Returns:
-        pd.DataFrame: A new DataFrame with One-Hot Encoded columns and original columns dropped.
-    """
-    # Create an instance of OneHotEncoder
-    encoder = OneHotEncoder()
+        # Convert all data in the column to strings
+        df[column] = df[column].astype(str)
 
-    # Fit the encoder to the specified categorical columns and transform the data
-    encoded_data = encoder.fit_transform(df[columns_to_encode])
+        # Fit and transform the column
+        encoded = encoder.fit_transform(df[[column]]).toarray()
 
-    # Convert the result to a DataFrame
-    encoded_df = pd.DataFrame(
-        encoded_data.toarray(), columns=encoder.get_feature_names_out(columns_to_encode)
-    )
+        # Create feature names manually
+        feature_names = [f"{column}_{category}" for category in encoder.categories_[0]]
 
-    # Concatenate the encoded DataFrame with the original DataFrame, dropping the original columns
-    df = pd.concat([df, encoded_df], axis=1)
-    df.drop(columns=columns_to_encode, inplace=True)
+        # Convert the encoded array back into a DataFrame
+        encoded_data = pd.DataFrame(encoded, columns=feature_names)
+
+        # Concatenate the original DataFrame and the encoded DataFrame
+        df = pd.concat([df, encoded_data], axis=1)
+
+        # Drop the original column
+        df = df.drop([column], axis=1)
     return df
 
 
@@ -70,14 +67,13 @@ def encode_appointment_status(df):
     df = df.drop(columns="Appointment status")
     return df
 
-
 def encode_hour_appointment(df):
     print("➡️ Extract Time of Appointment")
     df["hour_of_appointment"] = df["Appointment time"].str[:2].astype(int)
     df.drop(columns=["Appointment time"], inplace=True)
     return df
-
-
+  
+  
 def group_ethnicity_categories(df):
     print("➡️ Mapping Ethnicity category")
     ethnicity_dict = {
@@ -219,10 +215,11 @@ def feature_engeneering(df):
     split_appointment_date(df)
     filter_current_registration(df)
     calculate_days_difference(df)
-    one_hot_encode_columns(df)
     drop_rename_columns(df)
+    one_hot_encode_columns(df)
     print("💾 Saving to output_data/full_train_data.csv...")
     df.to_csv(f"{OUTPUT_DATA}full_train_data.csv", index=False)
     end_time = time.time()
     print(f"✅ Done in {round((end_time - start_time),2)} sec {df.shape}")
     return df
+

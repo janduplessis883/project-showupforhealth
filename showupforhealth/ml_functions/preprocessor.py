@@ -1,8 +1,6 @@
 # Import Libriries
-import re
 import pandas as pd
 import numpy as np
-import seaborn as sns
 from sklearn.preprocessing import LabelEncoder
 import pandas as pd
 import hashlib
@@ -162,7 +160,7 @@ def drop_rename_columns(df):
     return df
 
 def feature_engeneering(df):
-    print('‼️ Feature Engineering =================================================================')
+    print('‼️ == Feature Engineering =================================================================')
     format_datetime_columms(df)
     booked_by_clinicain(df)
     hash_patient_id(df)

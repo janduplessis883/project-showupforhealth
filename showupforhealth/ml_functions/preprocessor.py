@@ -32,12 +32,11 @@ def hash_patient_id(df, length=8):
     return df
 
 
-def one_hot_encode_columns(df, columns_to_encode=['Rota type', 'Ethnicity category']):
-    print("➡️ OHE Columns")
-
+def one_hot_encode_columns(df, columns_to_encode=['Rota', 'Ethnicity']):
+    print("➡️ OHE Columns Rota & Ethnicity")
+    encoder = OneHotEncoder()
     # Iterate over non-numeric columns
     for column in columns_to_encode:
-
         # Convert all data in the column to strings
         df[column] = df[column].astype(str)
 
@@ -95,6 +94,7 @@ def group_ethnicity_categories(df):
         "Other": "Unknown",
     }
     df["Ethnicity category"] = df["Ethnicity category"].map(ethnicity_dict)
+    df.rename(columns={"Ethnicity category": "Ethnicity"}, inplace=True)
     return df
 
 
@@ -216,7 +216,7 @@ def feature_engeneering(df):
     filter_current_registration(df)
     calculate_days_difference(df)
     drop_rename_columns(df)
-    one_hot_encode_columns(df)
+    #one_hot_encode_columns(df)
     print("💾 Saving to output_data/full_train_data.csv...")
     df.to_csv(f"{OUTPUT_DATA}full_train_data.csv", index=False)
     end_time = time.time()

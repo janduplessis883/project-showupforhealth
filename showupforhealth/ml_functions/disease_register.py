@@ -1,14 +1,14 @@
 import pandas as pd
+import time
 
 from showupforhealth.params import *
 from showupforhealth.ml_functions.encoders import haversine_distance
 
 
-def make_global_disease_register(
-    surgery_list=["ECS", "TCP", "TGP", "SMW", "KMC", "HPVM"]
-):
+def make_disease_register(surgery_list=["ECS", "TCP", "TGP", "SMW", "KMC", "HPVM"]):
+    start_time = time.time()
     print(
-        "‼️ Preparing Global Disease Register + IMD2023 info ===================================="
+        "==== Preparing Global Disease Register + IMD2023 info =========================="
     )
 
     disease_register = []
@@ -44,7 +44,7 @@ def make_global_disease_register(
         imd = pd.read_csv(IMD_DATA)
 
         full_register = register.merge(imd, how="left", on="Postcode")
-        print(f"   {surgery} IMD2023 added.")
+        print(f" - {surgery} IMD2023 added")
         full_register["distance_to_surg"] = full_register.apply(
             lambda row: haversine_distance(surgery, row["Latitude"], row["Longitude"]),
             axis=1,
@@ -52,16 +52,16 @@ def make_global_disease_register(
         disease_register.append(full_register)
 
     global_register = pd.concat(disease_register, axis=0, ignore_index=True)
-    print(f"🦠 Concat Registers into ONE REGISTER")
+    print(f"🔂 Concat Registers")
     global_register.dropna(inplace=True)
-    print(f"❌ Dropped NaN")
+    print(f"❌ Drop NaN")
+    print("💾 Saving to output_data/global_disease_register.csv...")
     register_out = f"{OUTPUT_DATA}global_disease_register.csv"
     global_register.to_csv(register_out, index=False)
-    print(
-        f"✅ Global Disease Register Saved to output-data: global_disease_register.csv {global_register.shape}"
-    )
+    end_time = time.time()
+    print(f"✅ Done in {round((end_time - start_time),2)} sec {global_register.shape}")
     return global_register
 
 
 if __name__ == "__main__":
-    make_global_disease_register()
+    make_disease_register()

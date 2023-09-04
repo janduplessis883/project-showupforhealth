@@ -26,4 +26,4 @@ test:
 
 # Specify package name
 lint:
-	@black package/
+	@black showupforhealth/

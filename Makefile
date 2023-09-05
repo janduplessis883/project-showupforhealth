@@ -17,7 +17,7 @@ disease_register:
 	python showupforhealth/ml_functions/disease_register.py
 
 # Build full pre-processed traing dataset
-data:
+train_data:
 	python showupforhealth/ml_functions/data.py
 
 
@@ -26,4 +26,4 @@ test:
 
 # Specify package name
 lint:
-	@black package/
+	@black showupforhealth/

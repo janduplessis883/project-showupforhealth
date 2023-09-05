@@ -26,22 +26,6 @@ def define_X_y(df, target):
 
     return X, y
 
-def train_val_test_split(X, y, val_size=0.2, test_size=0.2, random_state=42):
-    # Calculate intermediate size based on test_size
-    intermediate_size = 1 - test_size
-
-    # Calculate train_size from intermediate size and validation size
-    train_size = 1 - val_size / intermediate_size
-    X_train_val, X_test, y_train_val, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
-    X_train, X_val, y_train, y_val = train_test_split(X_train_val, y_train_val, train_size=train_size, random_state=random_state)
-
-    print(f"✅ OUTPUT: X_train, X_val, X_test, y_train, y_val, y_test")
-    print(f"Train Set:  X_train, y_train - {X_train.shape}, {y_train.shape}")
-    print(f"  Val Set:  X_val, y_val - - - {X_val.shape}, {y_val.shape}")
-    print(f" Test Set:  X_test, y_test - - {X_test.shape}, {y_test.shape}")
-    return X_train, X_val, X_test, y_train, y_val, y_test
-
-
 def automl_tpot(X, y):
     # Select features and target
     features = X
@@ -94,3 +78,31 @@ def feature_importance(model, X, y):
     plt.boxplot(result.importances[sorted_idx].T, vert=False, labels=X.columns[sorted_idx])
     plt.title("Permutation Importances")
     plt.show()
+
+
+# X = df.drop('Appointment_status', axis=1)
+# y = df['Appointment_status']
+
+def train_test_split(X, y, test_size=0.2, random_state=42):
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
+    
+    print(f"✅ OUTPUT: X_train, X_test, y_train, y_test")
+    print(f"Train Set:  X_train, y_train - {X_train.shape}, {y_train.shape}")
+    print(f" Test Set:  X_test, y_test - - {X_test.shape}, {y_test.shape}")
+    return X_train, X_test, y_train, y_test
+  
+def train_val_test_split(X, y, val_size=0.2, test_size=0.2, random_state=42):
+    # Calculate intermediate size based on test_size
+    intermediate_size = 1 - test_size
+
+    # Calculate train_size from intermediate size and validation size
+    train_size = 1 - val_size / intermediate_size
+    X_train_val, X_test, y_train_val, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
+    X_train, X_val, y_train, y_val = train_test_split(X_train_val, y_train_val, train_size=train_size, random_state=random_state)
+
+    print(f"✅ OUTPUT: X_train, X_val, X_test, y_train, y_val, y_test")
+    print(f"Train Set:  X_train, y_train - {X_train.shape}, {y_train.shape}")
+    print(f"  Val Set:  X_val, y_val - - - {X_val.shape}, {y_val.shape}")
+    print(f" Test Set:  X_test, y_test - - {X_test.shape}, {y_test.shape}")
+    return X_train, X_val, X_test, y_train, y_val, y_test
+

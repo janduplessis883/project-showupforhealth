@@ -5,7 +5,7 @@ from sklearn.model_selection import cross_validate, learning_curve
 from sklearn.metrics import make_scorer, accuracy_score, precision_score, recall_score, f1_score
 from sklearn.inspection import permutation_importance
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import plot_roc_curve
+#from sklearn.metrics import plot_roc_curve
 from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import auc
 from sklearn.inspection import permutation_importance
@@ -27,10 +27,10 @@ def perform_train_test_split(X, y, test_size=0.2, random_state=42):
 # Oversampling with SMOTE
 def oversample_with_smote(X_train, y_train, sampling_strategy='auto', k_neighbors=5, random_state=42):
     smote = SMOTE(sampling_strategy=sampling_strategy, k_neighbors=k_neighbors, random_state=random_state)
-    X_train_oversampled, y_train_oversampled = smote.fit_resample(X_train, y_train)
-    print(f'✅ Data Oversampled: SMOTE - X_train_oversampled:{X_train_res.shape} y_train_oversampled:{y_train_res.shape}')
+    X_train_os, y_train_os = smote.fit_resample(X_train, y_train)
+    print(f'✅ Data Oversampled: SMOTE - X_train_os:{X_train_os.shape} y_train_os :{y_train_os.shape}')
     
-    return X_train_oversampled, y_train_oversampled
+    return X_train_os, y_train_os
 
 
 def feature_importance(model, X, y):

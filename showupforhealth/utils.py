@@ -9,8 +9,16 @@ from sklearn.model_selection import train_test_split
 from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import auc
 from sklearn.inspection import permutation_importance
-from tpot import TPOTClassifier
-from datetime import datetime
+#from tpot import TPOTClassifier
+from datetime import datetime 
+
+import numpy as np
+import pandas as pd
+from IPython.core.display import display, HTML
+import matplotlib.pyplot as plt
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, make_scorer
+from sklearn.model_selection import cross_validate, learning_curve, StratifiedKFold
+#from sklearn.metrics import auc, plot_roc_curve
 
 
 # X = df.drop('Appointment_status', axis=1)
@@ -58,35 +66,47 @@ def feature_importance(model, X, y):
     plt.title("Permutation Importances")
     plt.show()
     
-def scale_df(df, scaler='minmax'):
+
+
+def fit_scaler(df, scaler_type='minmax'):
     """
-    Function to scale the numerical features of a dataframe.
+    Fit the scaler on the given data.
 
     Args:
-        df (DataFrame): The dataframe to scale.
-        scaler (str, optional): The type of scaling method to use. Can be 'standard', 'minmax', or 'robust'. Default is 'minmax'.
+        df (DataFrame): The dataframe on which the scaler is to be fitted.
+        scaler_type (str, optional): The type of scaling method to use. Can be 'standard', 'minmax', or 'robust'. Default is 'minmax'.
 
     Returns:
-        DataFrame: Returns a dataframe with the numerical features scaled.
+        scaler_instance: Fitted scaler.
     """
-    if scaler == 'standard':
-        scaler = StandardScaler()
-    elif scaler == 'minmax':
-        scaler = MinMaxScaler()
-    elif scaler == 'robust':
-        scaler = RobustScaler()
+    if scaler_type == 'standard':
+        scaler_instance = StandardScaler()
+    elif scaler_type == 'minmax':
+        scaler_instance = MinMaxScaler()
+    elif scaler_type == 'robust':
+        scaler_instance = RobustScaler()
     else:
-        raise ValueError('Invalid scaler type. Choose "standard" or "minimax".')
+        raise ValueError('Invalid scaler type. Choose "standard", "minmax", or "robust".')
 
-    # Get the column headers
+    scaler_instance.fit(df)
+    
+    return scaler_instance
+
+def transform_data(df, scaler_instance):
+    """
+    Transform the given data using the provided scaler.
+
+    Args:
+        df (DataFrame): The dataframe to transform.
+        scaler_instance: The scaler instance to use for transformation.
+
+    Returns:
+        DataFrame: Transformed data.
+    """
     column_headers = df.columns
-    # Fit the scaler to the data and transform the data
-    scaled_values = scaler.fit_transform(df)
-
-    # Convert the transformed data back to a DataFrame, preserving the column headers
+    scaled_values = scaler_instance.transform(df)
     scaled_df = pd.DataFrame(scaled_values, columns=column_headers)
 
-    print(f'✅ Data Scaled: {scaler} - {scaled_df.shape}')
     return scaled_df
 
 

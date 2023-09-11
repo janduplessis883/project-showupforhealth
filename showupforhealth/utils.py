@@ -11,6 +11,7 @@ from sklearn.metrics import (
 )
 from sklearn.inspection import permutation_importance
 from sklearn.model_selection import train_test_split
+from sklearn.utils import resample
 
 # from sklearn.metrics import plot_roc_curve
 from sklearn.model_selection import StratifiedKFold
@@ -333,3 +334,21 @@ def define_X_y(df, target):
     print(f"y - dependant variable - {target}: {y.shape}")
 
     return X, y
+
+def undersample_majority(df, target_col, undersample_factor):
+  
+  # Separate majority and minority classes
+  df_minority = df[df[target_col]==0] 
+  df_majority = df[df[target_col]==1]
+
+  # Undersample majority by factor
+  n_samples = len(df_minority) * undersample_factor
+  df_majority_under = resample(df_majority, replace=False, n_samples=n_samples, random_state=123)
+
+  # Combine minority class with undersampled majority class
+  df_undersampled = pd.concat([df_majority_under, df_minority])
+  
+  # Shuffle rows
+  df_undersampled = df_undersampled.sample(frac=1, random_state=123).reset_index(drop=True)
+
+  return df_undersampled

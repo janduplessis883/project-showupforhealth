@@ -5,7 +5,7 @@ from sklearn.model_selection import cross_validate, learning_curve
 from sklearn.metrics import make_scorer, accuracy_score, precision_score, recall_score, f1_score
 from sklearn.inspection import permutation_importance
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import plot_roc_curve
+# from sklearn.metrics import plot_roc_curve
 from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import auc
 from sklearn.inspection import permutation_importance
@@ -21,15 +21,15 @@ def perform_train_test_split(X, y, test_size=0.2, random_state=42):
     print(f"✅ OUTPUT: X_train, X_test, y_train, y_test")
     print(f"Train Set:  X_train, y_train - {X_train.shape}, {y_train.shape}")
     print(f" Test Set:  X_test, y_test - - {X_test.shape}, {y_test.shape}")
-    
+
     return X_train, X_test, y_train, y_test
 
 # Oversampling with SMOTE
 def oversample_with_smote(X_train, y_train, sampling_strategy='auto', k_neighbors=5, random_state=42):
     smote = SMOTE(sampling_strategy=sampling_strategy, k_neighbors=k_neighbors, random_state=random_state)
     X_train_oversampled, y_train_oversampled = smote.fit_resample(X_train, y_train)
-    print(f'✅ Data Oversampled: SMOTE - X_train_oversampled:{X_train_res.shape} y_train_oversampled:{y_train_res.shape}')
-    
+    print(f'✅ Data Oversampled: SMOTE - X_train_oversampled:{X_train_oversampled.shape} y_train_oversampled:{y_train_oversampled.shape}')
+
     return X_train_oversampled, y_train_oversampled
 
 
@@ -57,7 +57,7 @@ def feature_importance(model, X, y):
     plt.boxplot(result.importances[sorted_idx].T, vert=False, labels=X.columns[sorted_idx])
     plt.title("Permutation Importances")
     plt.show()
-    
+
 def scale_df(df, scaler='minmax'):
     """
     Function to scale the numerical features of a dataframe.
@@ -166,8 +166,8 @@ def evaluate_classification_model(model, X, y, cv=5):
     # Show plots
     plt.tight_layout()
     plt.show()
-    
-    
+
+
 def sample_df(df, n_samples):
     """
     Samples the input DataFrame.
@@ -245,4 +245,3 @@ def define_X_y(df, target):
     print(f'y - dependant variable - {target}: {y.shape}')
 
     return X, y
-

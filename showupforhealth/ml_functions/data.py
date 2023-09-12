@@ -71,7 +71,6 @@ def make_full_preprocess_data():
     return full_df
 
 
-
 if __name__ == "__main__":
     data = make_full_preprocess_data()
     feature_engineering(data)

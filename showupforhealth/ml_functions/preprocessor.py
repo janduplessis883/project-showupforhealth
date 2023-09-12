@@ -402,10 +402,10 @@ def feature_engineering(df):
     df.reset_index(inplace=True, drop=True)
     post_drop = df.shape[0]
     print(f"🔂 Rows from with Negative book_to_app_days: {pre_drop - post_drop}")
-    
+
     print(f"🔂 Drop rows with Sex Unknonw & Indeterminate")
-    df = df[~df['Sex'].isin(['Indeterminate', 'Unknown'])]
-    
+    df = df[~df["Sex"].isin(["Indeterminate", "Unknown"])]
+
     print(f"🔂 Labelencode Column Sex")
     le = LabelEncoder()
     df["Sex"] = le.fit_transform(df["Sex"])

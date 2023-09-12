@@ -44,18 +44,10 @@ def extract_rota_type(text):
     # Apply extract_role function and overwrite Rota type column
     # full_appointments['Rota type'] = full_appointments['Rota type'].apply(extract_rota_type)
     role_map = {
-        "GP": [
-            "GP",
-            "Urgent",
-            "GP Clinic"
-        ],
+        "GP": ["GP", "Urgent", "GP Clinic"],
         "Nurse": ["Nurse", "Nurse Practitioner"],
         "HCA": ["HCA", "Health Care Assistant"],
-        "ARRS": [
-            "Physiotherapist",
-            "Physicians Associate",
-            "ARRS"
-        ],
+        "ARRS": ["Physiotherapist", "Physicians Associate", "ARRS"],
     }
 
     for role, patterns in role_map.items():

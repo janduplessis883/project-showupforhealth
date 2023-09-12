@@ -21,7 +21,7 @@ def perform_train_test_split(X, y, test_size=0.2, random_state=42):
     print(f"✅ OUTPUT: X_train, X_test, y_train, y_test")
     print(f"Train Set:  X_train, y_train - {X_train.shape}, {y_train.shape}")
     print(f" Test Set:  X_test, y_test - - {X_test.shape}, {y_test.shape}")
-    
+
     return X_train, X_test, y_train, y_test
 
 # Oversampling with SMOTE
@@ -29,7 +29,7 @@ def oversample_with_smote(X_train, y_train, sampling_strategy='auto', k_neighbor
     smote = SMOTE(sampling_strategy=sampling_strategy, k_neighbors=k_neighbors, random_state=random_state)
     X_train_os, y_train_os = smote.fit_resample(X_train, y_train)
     print(f'✅ Data Oversampled: SMOTE - X_train_os:{X_train_os.shape} y_train_os :{y_train_os.shape}')
-    
+
     return X_train_os, y_train_os
 
 
@@ -57,7 +57,7 @@ def feature_importance(model, X, y):
     plt.boxplot(result.importances[sorted_idx].T, vert=False, labels=X.columns[sorted_idx])
     plt.title("Permutation Importances")
     plt.show()
-    
+
 def scale_df(df, scaler='minmax'):
     """
     Function to scale the numerical features of a dataframe.
@@ -166,8 +166,8 @@ def evaluate_classification_model(model, X, y, cv=5):
     # Show plots
     plt.tight_layout()
     plt.show()
-    
-    
+
+
 def sample_df(df, n_samples):
     """
     Samples the input DataFrame.
@@ -189,35 +189,35 @@ def sample_df(df, n_samples):
         return sampled_df
 
 
-def automl_tpot(X, y):
-    # Select features and target
-    features = X
-    target = y
+# def automl_tpot(X, y):
+#     # Select features and target
+#     features = X
+#     target = y
 
-    # Split the dataset into training and test sets
-    X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.2)
+#     # Split the dataset into training and test sets
+#     X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.2)
 
-    # Create a tpot object with a few generations and population size.
-    tpot = TPOTClassifier(generations=5, population_size=50, verbosity=2, random_state=42)
+#     # Create a tpot object with a few generations and population size.
+#     tpot = TPOTClassifier(generations=5, population_size=50, verbosity=2, random_state=42)
 
-    # Fit the tpot model on the training data
-    tpot.fit(X_train, y_train)
+    # # Fit the tpot model on the training data
+    # tpot.fit(X_train, y_train)
 
-    # Show the final model
-    print(tpot.fitted_pipeline_)
+    # # Show the final model
+    # print(tpot.fitted_pipeline_)
 
-    # Use the fitted model to make predictions on the test dataset
-    test_predictions = tpot.predict(X_test)
+    # # Use the fitted model to make predictions on the test dataset
+    # test_predictions = tpot.predict(X_test)
 
-    # Evaluate the model
-    print(tpot.score(X_test, y_test))
+    # # Evaluate the model
+    # print(tpot.score(X_test, y_test))
 
-    # Export the pipeline as a python script file
-    time = datetime().now()
-    root_dir = os.path.dirname(os.path.abspath(__file__))
-    output_dir = f'pipelines/tpot_pipeline_{time}.csv'
-    output_path = os.path.join(root_dir, output_dir)
-    tpot.export(output_path)
+    # # Export the pipeline as a python script file
+    # time = datetime().now()
+    # root_dir = os.path.dirname(os.path.abspath(__file__))
+    # output_dir = f'pipelines/tpot_pipeline_{time}.csv'
+    # output_path = os.path.join(root_dir, output_dir)
+    # tpot.export(output_path)
 
 
 def train_val_test_split(X, y, val_size=0.2, test_size=0.2, random_state=42):
@@ -245,4 +245,3 @@ def define_X_y(df, target):
     print(f'y - dependant variable - {target}: {y.shape}')
 
     return X, y
-

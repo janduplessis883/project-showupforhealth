@@ -3,7 +3,7 @@ import time
 
 from showupforhealth.params import *
 from showupforhealth.ml_functions.disease_register import make_disease_register
-from showupforhealth.ml_functions.preprocessor import feature_engeneering
+from showupforhealth.ml_functions.preprocessor import *
 
 
 def create_global_appointments_list(
@@ -71,11 +71,6 @@ def make_full_preprocess_data():
     return full_df
 
 
-def make_train_data():
-    make_disease_register()
-    data = make_full_preprocess_data()
-    feature_engeneering(data)
-
-
 if __name__ == "__main__":
-    make_full_preprocess_data()
+    data = make_full_preprocess_data()
+    feature_engineering(data)

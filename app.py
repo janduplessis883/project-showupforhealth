@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
 import time
 
 # Page title
@@ -18,7 +17,7 @@ my_bar = st.progress(0)
 success_text = "File uploaded successfully!"
 
 for percent_complete in range(100):
-     time.sleep(0.05)
+     time.sleep(0.08)
      my_bar.progress(percent_complete + 1)
 
 st.success(success_text)
@@ -27,30 +26,6 @@ st.success(success_text)
 if uploaded_file:
     df = pd.read_csv(uploaded_file)
     st.write(df)
-
-
-st.button('Predict')
-
-# Load your trained model (replace with your model file)
-# model = model.name()
-# model.load('your_model.pkl ???predict.csv???')
-
-# # Create input fields for user to input data
-# feature1 = st.number_input('Input feature 1')
-# feature2 = st.number_input('Input feature 2')
-# feature3 = st.number_input('Input feature 3')
-
-# Create a button, when clicked, run prediction
-# if st.button('Predict'):
-    # Reshape inputs to match model's input shape
-    # df = np.array([feature1, feature2, feature3]).reshape(1, -1)
-
-    # # Use model to predict
-    # prediction = model.predict(df)
-
-    # # Display prediction
-    # st.write(f'Prediction: {prediction}')
-
 
 
 

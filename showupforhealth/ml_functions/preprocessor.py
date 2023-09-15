@@ -244,7 +244,7 @@ def one_hot_encode_columns(df, columns_to_encode=["Rota", "Ethnicity"]):
 def feature_engineering(df):
     start_time = time.time()
     print(
-        "=== Feature Engineering ============================================================="
+        "\n=== Feature Engineering ============================================================="
     )
     print("🔂 Rename Columns")
     df.rename(
@@ -299,9 +299,9 @@ def feature_engineering(df):
     # df[['week', 'month', 'day_of_week']] = df['Appointment date'].apply(lambda x: pd.Series([x.week, x.month, x.dayofweek]))
     print("🔂 Week")
     df["week"] = df["Appointment date"].dt.isocalendar().week
-    print("🔂 month")
+    print("🔂 Month")
     df["month"] = df["Appointment date"].dt.month
-    print("🔂 day of week")
+    print("🔂 Day of week")
     df["day_of_week"] = df["Appointment date"].dt.dayofweek
 
     type_cast_cols = {
@@ -383,7 +383,7 @@ def feature_engineering(df):
             "Latitude",
             "Longitude",
             "NHS number",
-            "Patient ID",
+           # "Patient ID",
             "Registration status",
         ],
         inplace=True,
@@ -410,7 +410,7 @@ def feature_engineering(df):
     le = LabelEncoder()
     df["Sex"] = le.fit_transform(df["Sex"])
 
-    print(f"🔂 OneHotEncode Column Rota")
+    print(f"🔂 OneHotEncode Rota types")
     # OneHotEncode Rota
     ohe = OneHotEncoder(handle_unknown="ignore")
     encoded = ohe.fit_transform(df[["Rota"]]).toarray()
@@ -440,8 +440,11 @@ def feature_engineering(df):
     # Drop the original column
     df = df.drop(["Ethnicity category"], axis=1)
 
+    print(f"🔂 Drop NaN")
+    df.dropna(inplace=True)
+
     print("💾 Saving to output_data/full_train_data.csv...")
-    df.to_csv(f"{OUTPUT_DATA}full_train_data.csv", index=False)
+    df.to_csv(f"{OUTPUT_DATA}/full_train_data.csv", index=False)
     end_time = time.time()
     print(f"✅ Done in {round((end_time - start_time),2)} sec {df.shape}")
     return df

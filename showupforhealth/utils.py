@@ -1,8 +1,14 @@
-
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.model_selection import learning_curve
-from sklearn.metrics import accuracy_score, recall_score, precision_score, f1_score, roc_curve, auc
+from sklearn.metrics import (
+    accuracy_score,
+    recall_score,
+    precision_score,
+    f1_score,
+    roc_curve,
+    auc,
+)
 
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler
@@ -341,59 +347,68 @@ def define_X_y(df, target):
 
     return X, y
 
+
 def undersample_majority(df, target_col, undersample_factor):
+    # Separate majority and minority classes
+    df_minority = df[df[target_col] == 0]
 
+    # Separate majority and minority classes
+    df_minority = df[df[target_col] == 0]
 
-  # Separate majority and minority classes
-  df_minority = df[df[target_col]==0]
+    df_majority = df[df[target_col] == 1]
 
+    # Undersample majority by factor
+    n_samples = len(df_minority) * undersample_factor
+    df_majority_under = resample(
+        df_majority, replace=False, n_samples=n_samples, random_state=123
+    )
 
-  # Separate majority and minority classes
-  df_minority = df[df[target_col]==0]
+    # Combine minority class with undersampled majority class
+    df_undersampled = pd.concat([df_majority_under, df_minority])
 
-  df_majority = df[df[target_col]==1]
+    # Combine minority class with undersampled majority class
+    df_undersampled = pd.concat([df_majority_under, df_minority])
 
-  # Undersample majority by factor
-  n_samples = len(df_minority) * undersample_factor
-  df_majority_under = resample(df_majority, replace=False, n_samples=n_samples, random_state=123)
+    # Shuffle rows
+    df_undersampled = df_undersampled.sample(frac=1, random_state=123).reset_index(
+        drop=True
+    )
 
-
-   # Combine minority class with undersampled majority class
-  df_undersampled = pd.concat([df_majority_under, df_minority])
-
-
-
-   # Combine minority class with undersampled majority class
-  df_undersampled = pd.concat([df_majority_under, df_minority])
-
-
-  # Shuffle rows
-  df_undersampled = df_undersampled.sample(frac=1, random_state=123).reset_index(drop=True)
-
-  return df_undersampled
+    return df_undersampled
 
 
 def plot_roc_curve_alternative(model, X_test, y_test):
-    y_scores = model.predict_proba(X_test)[:, 1]  # Probability estimates for the positive class
+    y_scores = model.predict_proba(X_test)[
+        :, 1
+    ]  # Probability estimates for the positive class
     fpr, tpr, thresholds = roc_curve(y_test, y_scores)
     roc_auc = auc(fpr, tpr)
 
     plt.figure()
     lw = 2
-    plt.plot(fpr, tpr, color='darkorange', lw=lw, label='ROC curve (area = {:.2f})'.format(roc_auc))
-    plt.plot([0, 1], [0, 1], color='navy', lw=lw, linestyle='--')
+    plt.plot(
+        fpr,
+        tpr,
+        color="darkorange",
+        lw=lw,
+        label="ROC curve (area = {:.2f})".format(roc_auc),
+    )
+    plt.plot([0, 1], [0, 1], color="navy", lw=lw, linestyle="--")
     plt.xlim([0.0, 1.0])
     plt.ylim([0.0, 1.05])
-    plt.xlabel('False Positive Rate')
-    plt.ylabel('True Positive Rate')
-    plt.title('Receiver Operating Characteristic (ROC) Curve')
-    plt.legend(loc='lower right')
+    plt.xlabel("False Positive Rate")
+    plt.ylabel("True Positive Rate")
+    plt.title("Receiver Operating Characteristic (ROC) Curve")
+    plt.legend(loc="lower right")
 
     plt.show()
 
+
 def evaluate_classification_model(model, X, y, cv=5):
     # Split the data into training and test sets
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=42
+    )
 
     # Fit the model on the training data
     model.fit(X_train, y_train)
@@ -408,7 +423,9 @@ def evaluate_classification_model(model, X, y, cv=5):
     f1 = f1_score(y_test, y_pred)
 
     # Plot the learning curve
-    train_sizes, train_scores, test_scores = learning_curve(model, X_train, y_train, cv=cv)
+    train_sizes, train_scores, test_scores = learning_curve(
+        model, X_train, y_train, cv=cv
+    )
 
     plt.figure(figsize=(12, 6))
     plt.subplot(1, 2, 1)
@@ -416,8 +433,10 @@ def evaluate_classification_model(model, X, y, cv=5):
     plt.xlabel("Training examples")
     plt.ylabel("Score")
     plt.grid()
-    plt.plot(train_sizes, np.mean(train_scores, axis=1), 'o-', label="Training score")
-    plt.plot(train_sizes, np.mean(test_scores, axis=1), 'o-', label="Cross-validation score")
+    plt.plot(train_sizes, np.mean(train_scores, axis=1), "o-", label="Training score")
+    plt.plot(
+        train_sizes, np.mean(test_scores, axis=1), "o-", label="Cross-validation score"
+    )
     plt.legend(loc="best")
 
     # Plot the ROC curve using the alternative method
@@ -426,12 +445,14 @@ def evaluate_classification_model(model, X, y, cv=5):
     plt.tight_layout()
     plt.show()
 
-
     plt.show()
+
 
 def evaluate_classification_model(model, X, y, cv=5):
     # Split the data into training and test sets
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=42
+    )
 
     # Fit the model on the training data
     model.fit(X_train, y_train)
@@ -446,7 +467,9 @@ def evaluate_classification_model(model, X, y, cv=5):
     f1 = f1_score(y_test, y_pred)
 
     # Plot the learning curve
-    train_sizes, train_scores, test_scores = learning_curve(model, X_train, y_train, cv=cv)
+    train_sizes, train_scores, test_scores = learning_curve(
+        model, X_train, y_train, cv=cv
+    )
 
     plt.figure(figsize=(12, 6))
     plt.subplot(1, 2, 1)
@@ -454,8 +477,10 @@ def evaluate_classification_model(model, X, y, cv=5):
     plt.xlabel("Training examples")
     plt.ylabel("Score")
     plt.grid()
-    plt.plot(train_sizes, np.mean(train_scores, axis=1), 'o-', label="Training score")
-    plt.plot(train_sizes, np.mean(test_scores, axis=1), 'o-', label="Cross-validation score")
+    plt.plot(train_sizes, np.mean(train_scores, axis=1), "o-", label="Training score")
+    plt.plot(
+        train_sizes, np.mean(test_scores, axis=1), "o-", label="Cross-validation score"
+    )
     plt.legend(loc="best")
 
     # Plot the ROC curve using the alternative method
@@ -463,7 +488,6 @@ def evaluate_classification_model(model, X, y, cv=5):
 
     plt.tight_layout()
     plt.show()
-
 
     # Print the evaluation metrics
     print(f"Accuracy: {accuracy:.2f}")

@@ -46,8 +46,8 @@ def extract_rota_type(text):
     role_map = {
         "GP": ["GP", "Urgent", "GP Clinic"],
         "Nurse": ["Nurse", "Nurse Practitioner"],
-        "HCA": ["HCA", "Health Care Assistant"],
-        "ARRS": ["Physiotherapist", "Physicians Associate", "ARRS"],
+        "HCA": ["HCA", "Session"],
+        "ARRS": ["Physiotherapist", "Physicians Associate", "ARRS", "Clinical Pharmacist", "Pharmacist"],
     }
 
     for role, patterns in role_map.items():
@@ -106,4 +106,4 @@ def extract_ethnicity(text):
         for pattern in patterns:
             if re.search(pattern, text):
                 return role
-    return "Unknown"
+    return "Other"

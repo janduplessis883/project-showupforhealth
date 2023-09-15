@@ -383,7 +383,7 @@ def feature_engineering(df):
             "Latitude",
             "Longitude",
             "NHS number",
-            "Patient ID",
+           # "Patient ID",
             "Registration status",
         ],
         inplace=True,
@@ -444,7 +444,7 @@ def feature_engineering(df):
     df.dropna(inplace=True)
 
     print("💾 Saving to output_data/full_train_data.csv...")
-    df.to_csv(f"{OUTPUT_DATA}full_train_data.csv", index=False)
+    df.to_csv(f"{OUTPUT_DATA}/full_train_data.csv", index=False)
     end_time = time.time()
     print(f"✅ Done in {round((end_time - start_time),2)} sec {df.shape}")
     return df

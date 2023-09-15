@@ -23,6 +23,9 @@ train_data:
 app:
 	@streamlit run showupforhealth/interface/app.py
 
+predict:
+	python showupforhealth/ml_functions/predict.py
+
 test:
 	@pytest -v tests
 

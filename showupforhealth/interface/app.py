@@ -28,17 +28,6 @@ surgery_prefix = st.selectbox(
 # Print selected clinic
 st.write("You selected:", surgery_prefix)
 
-# Show dataframe of predictions
-st.write(streamlit_predict(surgery_prefix))
-
-# model_weight_file_path = MODEL_OUTPUT
-
-
-# df =  pd.read_csv(f"{PREDICT_DATA}/{surgery_prefix}_predict.csv")
-# st.write(predict_model(model_weight_file_path, df))
-
-
-
 
 # Create a button, when clicked, run prediction
 
@@ -52,15 +41,12 @@ st.write(streamlit_predict(surgery_prefix))
 # feature3 = st.number_input('Input feature 3')
 
 
-st.button("Predict")
-#     # Reshape inputs to match model's input shape
-#     data = np.array([feature1, feature2, feature3]).reshape(1, -1)
+if st.button("Predict"):
+    # Use model to predict
+    prediction = predict_model()
 
-#     # Use model to predict
-#     prediction = model.predict(df)
-
-#     # Display prediction
-#     st.write(f'Prediction: {prediction}')
+    # Display prediction
+    st.write(f'Prediction: {prediction}')
 
 
 # Button to download the dataframe as a csv file

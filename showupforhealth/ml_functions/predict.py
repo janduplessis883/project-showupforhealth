@@ -11,10 +11,7 @@ from sklearn.preprocessing import OneHotEncoder
 
 
 def predict_add_weather(surgery_prefix):
-    print(
-        "\n=== Preparing Appoitment Data for Prediction ================================="
-    )
-    print(f"🌤️ Prediction: {surgery_prefix} - preparing appointment data for weather")
+    print(f"\n=== 🌤️ Prediction: {surgery_prefix} - preparing appointment data for weather ======================")
     data = pd.read_csv(f"{PREDICT_DATA}/{surgery_prefix}_predict.csv")
     print(
         f"👩🏻‍🦰 Appointments: {data.shape[0]} 🧑🏻‍🦰 Unique Patient IDs; {data['Patient ID'].nunique()}"
@@ -92,7 +89,7 @@ def predict_add_global_register(df):
 def predict_feature_engineering(df):
     start_time = time.time()
     print(
-        "\n=== Feature Engineering ============================================================="
+        "\n=== Predict Feature Engineering ============================================="
     )
     print("🔂 Rename Columns")
     df.rename(
@@ -131,7 +128,7 @@ def predict_feature_engineering(df):
     df["booked_by_clinician"] = (df["Booked_by"] == df["Clinician"]).astype(int)
 
     print("🔂 Extract Rota Types")
-    df["Rota"] = df["Rota"].map(extract_rota_type)
+    df["Rota"] = df["Rota"].map(predict_extract_rota_type)
 
     print("🔂 registered_for_months")
     df["registered_for_months"] = (
@@ -282,10 +279,11 @@ def predict_feature_engineering(df):
 
 
 def add_noshows(df):
+    print('🔀 Merge No_shows from csv file')
     noshows = pd.read_csv(f"{OUTPUT_DATA}/no_shows_db.csv")
     merged = df.merge(noshows, on="Patient ID", how="left")
     countin = merged.shape[0]
-    merged.dropna(inplace=True)
+    merged = merged.fillna(0)
     countout = merged.shape[0]
     print(f"❌ Drop NaN - No Shows Merge = {countin - countout}")
 
@@ -295,7 +293,7 @@ def add_noshows(df):
 def test_predict(df):
     no_columns = df.shape[1]
     if no_columns != 37:
-        print("⛔️ TEST FAILEDm - df not 37 columns, inspect!")
+        print("⛔️⛔️⛔️ TEST FAILED - df not 37 columns, inspect! ⛔️⛔️⛔️ ")
     else:
         print("❗️TEST PASSED - df has 37 columns!")
 

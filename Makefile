@@ -20,6 +20,9 @@ disease_register:
 train_data:
 	python showupforhealth/ml_functions/data.py
 
+no_shows:
+	python showupforhealth/ml_functions/no_shows.py
+
 app:
 	@streamlit run showupforhealth/interface/app.py
 

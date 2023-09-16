@@ -62,6 +62,28 @@ def extract_rota_type(text):
                 return role
     return "DROP"
 
+def predict_extract_rota_type(text):
+    # HOW TO APPLY IT
+    # Apply extract_role function and overwrite Rota type column
+    # full_appointments['Rota type'] = full_appointments['Rota type'].apply(extract_rota_type)
+    role_map = {
+        "GP": ["GP", "Urgent", "GP Clinic"],
+        "Nurse": ["Nurse", "Nurse Practitioner"],
+        "HCA": ["HCA", "Session"],
+        "ARRS": [
+            "Physiotherapist",
+            "Physicians Associate",
+            "ARRS",
+            "Clinical Pharmacist",
+            "Pharmacist",
+        ],
+    }
+
+    for role, patterns in role_map.items():
+        for pattern in patterns:
+            if re.search(pattern, text):
+                return role
+    return "GP"
 
 def fix_appointment_status(status):
     """

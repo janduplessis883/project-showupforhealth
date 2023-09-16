@@ -28,8 +28,14 @@ surgery_prefix = st.selectbox(
 # Print selected clinic
 st.write("You selected:", surgery_prefix)
 
-
 # Create a button, when clicked, run prediction
+if st.button("Predict"):
+    # Use model to predict
+    prediction = predict_model()
+
+    # Display prediction
+    st.write(f'Prediction: {prediction}')
+
 
 # Load the trained model (replace with your model file)
 # model = model_name()
@@ -41,12 +47,6 @@ st.write("You selected:", surgery_prefix)
 # feature3 = st.number_input('Input feature 3')
 
 
-if st.button("Predict"):
-    # Use model to predict
-    prediction = predict_model()
-
-    # Display prediction
-    st.write(f'Prediction: {prediction}')
 
 
 # Button to download the dataframe as a csv file

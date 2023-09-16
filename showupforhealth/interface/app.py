@@ -10,6 +10,7 @@ from showupforhealth.ml_functions.predict import *
 from showupforhealth.params import *
 from showupforhealth.utils import *
 from showupforhealth.ml_functions.encoders import *
+from showupforhealth.ml_functions.model import *
 
 from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import OneHotEncoder
@@ -30,10 +31,14 @@ st.write("You selected:", surgery_prefix)
 # Show dataframe of predictions
 st.write(streamlit_predict(surgery_prefix))
 
+# model_weight_file_path = MODEL_OUTPUT
+
+
+# df =  pd.read_csv(f"{PREDICT_DATA}/{surgery_prefix}_predict.csv")
+# st.write(predict_model(model_weight_file_path, df))
 
 
 
-  
 
 # Create a button, when clicked, run prediction
 

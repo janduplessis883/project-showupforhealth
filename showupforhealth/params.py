@@ -17,7 +17,7 @@ WEATHER_DATA = os.path.join(
     "data-showup",
     "data",
     "weather",
-    "weather.csv"
+    "weather.csv",
 )
 
 IMD_DATA = os.path.join(
@@ -27,7 +27,7 @@ IMD_DATA = os.path.join(
     "data-showup",
     "data",
     "imd-master",
-    "imd_master.csv"
+    "imd_master.csv",
 )
 
 OUTPUT_DATA = os.path.join(

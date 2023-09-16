@@ -17,7 +17,9 @@ def create_global_appointments_list(
         print(f"⏺️ {surgery_prefix} -", end=" ")
         df_list = []
         for i in range(1, 10, 1):
-            app = pd.read_csv(f"{RAW_DATA}/{surgery_prefix}/{surgery_prefix}_APP{i}.csv")
+            app = pd.read_csv(
+                f"{RAW_DATA}/{surgery_prefix}/{surgery_prefix}_APP{i}.csv"
+            )
             print(f"df {i} ", end=" ")
             df_list.append(app)
 
@@ -69,8 +71,6 @@ def make_full_preprocess_data():
     end_time = time.time()
     print(f"✅ Done in {round((end_time - start_time),2)} sec {full_df.shape}")
     return full_df
-
-
 
 
 if __name__ == "__main__":

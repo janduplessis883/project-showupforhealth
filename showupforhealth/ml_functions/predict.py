@@ -1,5 +1,5 @@
 import requests
-import pandas as pd 
+import pandas as pd
 import time
 
 from showupforhealth.params import *
@@ -11,71 +11,83 @@ from sklearn.preprocessing import OneHotEncoder
 
 
 def predict_add_weather(surgery_prefix):
-    print('\n=== Preparing Appoitment Data for Prediction =================================')
-    print(f'🌤️ Prediction: {surgery_prefix} - preparing appointment data for weather')
-    data = pd.read_csv(f'{PREDICT_DATA}/{surgery_prefix}_predict.csv')
-    data['weather_time'] = data['Appointment time'].str.split('-').str[0]
-    data['weather_datetime'] = data['Appointment date'] + " " + data['weather_time']
-    data['Appointment date'] = pd.to_datetime(data['Appointment date'])
-    data['weather_datetime'] = pd.to_datetime(data['weather_datetime'])
-    start_date = data['Appointment date'].dt.strftime('%Y-%m-%d').min()
-    end_date = data['Appointment date'].dt.strftime('%Y-%m-%d').max()
-    
+    print(
+        "\n=== Preparing Appoitment Data for Prediction ================================="
+    )
+    print(f"🌤️ Prediction: {surgery_prefix} - preparing appointment data for weather")
+    data = pd.read_csv(f"{PREDICT_DATA}/{surgery_prefix}_predict.csv")
+    print(
+        f"👩🏻‍🦰 Appointments: {data.shape[0]} 🧑🏻‍🦰 Unique Patient IDs; {data['Patient ID'].nunique()}"
+    )
+    data["weather_time"] = data["Appointment time"].str.split("-").str[0]
+    data["weather_datetime"] = data["Appointment date"] + " " + data["weather_time"]
+    data["Appointment date"] = pd.to_datetime(data["Appointment date"])
+    data["weather_datetime"] = pd.to_datetime(data["weather_datetime"])
+    start_date = data["Appointment date"].dt.strftime("%Y-%m-%d").min()
+    end_date = data["Appointment date"].dt.strftime("%Y-%m-%d").max()
+
     # Getting API Data
     # Define the base URL of the API
-    base_url = 'https://api.open-meteo.com/v1/forecast'
+    base_url = "https://api.open-meteo.com/v1/forecast"
 
     # Define the parameters as a dictionary
     params = {
-        'latitude': '51.5085',
-        'longitude': '0.1257',
-        'hourly': 'temperature_2m,precipitation',
-        'start_date': start_date,
-        'end_date': end_date
+        "latitude": "51.5085",
+        "longitude": "0.1257",
+        "hourly": "temperature_2m,precipitation",
+        "start_date": start_date,
+        "end_date": end_date
         # Add more parameters as needed
     }
 
     # Make the API call using the requests library
     response = requests.get(base_url, params=params)
-    print(f'🛜 Requesting forcast from Open-Meteo Weather API {start_date} - {end_date}')
+    print(f"🛜 Requesting forcast from Open-Meteo Weather API {start_date} - {end_date}")
     # Check if the request was successful (status code 200)
     if response.status_code == 200:
         # Parse and work with the API response, which is typically in JSON format
-        api_data = response.json()['hourly']
+        api_data = response.json()["hourly"]
         # Now you can work with the data returned by the API
         api_data = pd.DataFrame(api_data)
     else:
         # If the request was not successful, handle the error
         print(f"Error: {response.status_code}")
         print(response.text)
-        
-    api_data = api_data.rename(columns={'time': 'weather_datetime', 'temperature_2m': 'temp', 'precipitation': 'precipitation'})
-    api_data['weather_datetime'] = pd.to_datetime(api_data['weather_datetime'])
-    
+
+    api_data = api_data.rename(
+        columns={
+            "time": "weather_datetime",
+            "temperature_2m": "temp",
+            "precipitation": "precipitation",
+        }
+    )
+    api_data["weather_datetime"] = pd.to_datetime(api_data["weather_datetime"])
+
     # Merging dataframes
-    print(f'🔂 Merge weather + appointment data')
-    df = data.merge(api_data, how='left', on='weather_datetime')
+    print(f"🔂 Merge weather + appointment data")
+    df = data.merge(api_data, how="left", on="weather_datetime")
     nanindf = df.isna().sum()
-    
+
     if nanindf.sum() > 0:
-        print(f'❌ NaN values in df - ERROR: {nanindf}')
+        print(f"❌ NaN values in df - ERROR: {nanindf}")
     else:
-        print('✅ Successful: return df')
-        df['Patient ID'] = df['Patient ID'].astype('int')
+        print("✅ Successful: return df")
+        df["Patient ID"] = df["Patient ID"].astype("int")
         return df
 
 
 def predict_add_global_register(df):
-    print(f'👉 Appointment DF in: {df.shape}')
-    register = pd.read_csv(f'{OUTPUT_DATA}/global_disease_register.csv', dtype='str')
-    register['Patient ID'] = register['Patient ID'].astype('int')
-    predict_df = df.merge(register, how='left', on='Patient ID')
-    print(f'🔀 Disease Register merged with prediction data - {predict_df.shape}')
+    print(f"👉 Appointment DF in: {df.shape}")
+    register = pd.read_csv(f"{OUTPUT_DATA}/global_disease_register.csv", dtype="str")
+    register["Patient ID"] = register["Patient ID"].astype("int")
+    predict_df = df.merge(register, how="left", on="Patient ID")
+    print(f"🔀 Disease Register merged with prediction data - {predict_df.shape}")
     incount = predict_df.shape[0]
     predict_df = predict_df.dropna()
     outcount = predict_df.shape[0]
-    print(f'❌ Drop NaN - Disease Register Merge = {incount - outcount}')
+    print(f"❌ Drop NaN - Disease Register Merge = {incount - outcount}")
     return predict_df
+
 
 def predict_feature_engineering(df):
     start_time = time.time()
@@ -264,26 +276,48 @@ def predict_feature_engineering(df):
     print(f"🔂 Drop NaN")
     df.dropna(inplace=True)
 
-
     end_time = time.time()
     print(f"✅ Done in {round((end_time - start_time),2)} sec {df.shape}")
     return df
 
+
 def add_noshows(df):
-    noshows = pd.read_csv(f'{OUTPUT_DATA}/no_shows_db.csv')
-    merged = df.merge(noshows, on='Patient ID', how='left')
+    noshows = pd.read_csv(f"{OUTPUT_DATA}/no_shows_db.csv")
+    merged = df.merge(noshows, on="Patient ID", how="left")
     countin = merged.shape[0]
     merged.dropna(inplace=True)
     countout = merged.shape[0]
-    print(f'❌ Drop NaN - No Shows Merge = {countin - countout}')
-    
+    print(f"❌ Drop NaN - No Shows Merge = {countin - countout}")
+
     return merged
 
 
+def test_predict(df):
+    no_columns = df.shape[1]
+    if no_columns != 37:
+        print("⛔️ TEST FAILEDm - df not 37 columns, inspect!")
+    else:
+        print("❗️TEST PASSED - df has 37 columns!")
 
-if __name__ == '__main__':
-    surgery_prefix = input('Surgery Prefix: ')
+
+def make_predict():
+    surgery_prefix = input("Enter Surgery Prefix: ")
     df = predict_add_weather(surgery_prefix=surgery_prefix)
     df = predict_add_global_register(df)
     df = add_noshows(df)
-    predict_feature_engineering(df)
+    df = predict_feature_engineering(df)
+    test_predict(df)
+    return df
+
+
+def streamlit_predict(surgery_prefix):
+    df = predict_add_weather(surgery_prefix=surgery_prefix)
+    df = predict_add_global_register(df)
+    df = add_noshows(df)
+    df = predict_feature_engineering(df)
+    test_predict(df)
+    return df
+
+
+if __name__ == "__main__":
+    make_predict()

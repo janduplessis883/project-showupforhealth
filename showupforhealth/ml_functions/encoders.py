@@ -47,7 +47,13 @@ def extract_rota_type(text):
         "GP": ["GP", "Urgent", "GP Clinic"],
         "Nurse": ["Nurse", "Nurse Practitioner"],
         "HCA": ["HCA", "Session"],
-        "ARRS": ["Physiotherapist", "Physicians Associate", "ARRS", "Clinical Pharmacist", "Pharmacist"],
+        "ARRS": [
+            "Physiotherapist",
+            "Physicians Associate",
+            "ARRS",
+            "Clinical Pharmacist",
+            "Pharmacist",
+        ],
     }
 
     for role, patterns in role_map.items():

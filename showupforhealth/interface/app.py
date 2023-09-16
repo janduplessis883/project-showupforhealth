@@ -8,10 +8,11 @@ st.title("Show up for Health")
 
 # Drop down menu for clinics
 clinic_option = st.selectbox(
-    'Which clinic would you like to select?',
-    ("ECS", "HPVM", "KMC", "SMW", "TCP", "TGP"))
+    "Which clinic would you like to select?",
+    ("ECS", "HPVM", "KMC", "SMW", "TCP", "TGP"),
+)
 
-st.write('You selected:', clinic_option)
+st.write("You selected:", clinic_option)
 
 # Uploaded banner
 uploaded_file = st.file_uploader("Upload your file here")
@@ -45,7 +46,7 @@ if uploaded_file:
 # feature3 = st.number_input('Input feature 3')
 
 
-st.button('Predict')
+st.button("Predict")
 #     # Reshape inputs to match model's input shape
 #     data = np.array([feature1, feature2, feature3]).reshape(1, -1)
 
@@ -54,7 +55,6 @@ st.button('Predict')
 
 #     # Display prediction
 #     st.write(f'Prediction: {prediction}')
-
 
 
 # Button to download the dataframe as a csv file

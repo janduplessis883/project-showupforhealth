@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import time
+from showupforhealth.ml_functions.predict import *
 
 # Page title
 st.title("Show up for Health")
@@ -32,6 +33,8 @@ st.success(success_text)
 if uploaded_file:
     df = pd.read_csv(uploaded_file)
     st.write(df)
+
+streamlit_predict(df)
 
 
 # Create a button, when clicked, run prediction

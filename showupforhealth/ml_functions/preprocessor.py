@@ -41,15 +41,17 @@ def encode_appointment_status(df):
     df = df.drop(columns="Appointment status")
     return df
 
+
 def encode_hour_appointment(df):
     print("➡️ Extract Time of Appointment")
     df["hour_of_appointment"] = df["Appointment time"].str[:2].astype(int)
     df.drop(columns=["Appointment time"], inplace=True)
     return df
-  
-  
+
+
 import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
+
 
 def encode_ethnicity_categories(df):
     print("➡️ Mapping Ethnicity category")
@@ -71,30 +73,31 @@ def encode_ethnicity_categories(df):
         "Bangladeshi or British Bangladeshi": "Asian",
         "Other": "Unknown",
     }
-    
+
     if "Ethnicity category" not in df.columns:
         raise ValueError("Ethnicity category column not found in DataFrame")
-    
+
     df["Ethnicity category"] = df["Ethnicity category"].map(ethnicity_dict)
     df.rename(columns={"Ethnicity category": "Ethnicity"}, inplace=True)
-    
+
     # Initialize OneHotEncoder
-    encoder = OneHotEncoder(categories='auto', sparse=False)
+    encoder = OneHotEncoder(categories="auto", sparse=False)
 
     # Fit and transform the 'Ethnicity' column
-    encoded_ethnicity = encoder.fit_transform(df[['Ethnicity']])
+    encoded_ethnicity = encoder.fit_transform(df[["Ethnicity"]])
 
     # Convert the encoded array back into a DataFrame
-    encoded_ethnicity_df = pd.DataFrame(encoded_ethnicity, columns=encoder.get_feature_names_out(['Ethnicity']))
+    encoded_ethnicity_df = pd.DataFrame(
+        encoded_ethnicity, columns=encoder.get_feature_names_out(["Ethnicity"])
+    )
 
     # Concatenate the original DataFrame and the encoded DataFrame
     data = pd.concat([df, encoded_ethnicity_df], axis=1)
 
     # Drop the original 'Ethnicity' column
-    data = data.drop(['Ethnicity'], axis=1)
-    
-    return data
+    data = data.drop(["Ethnicity"], axis=1)
 
+    return data
 
 
 # Jan pre-processor Functions
@@ -195,169 +198,222 @@ def drop_rename_columns(df):
     df.rename(columns={"Age in years": "Age"}, inplace=True)
     return df
 
-def one_hot_encode_columns(df, columns_to_encode=['Rota', 'Ethnicity']):
+
+def one_hot_encode_columns(df, columns_to_encode=["Rota", "Ethnicity"]):
     print("➡️ OHE Columns Rota & Ethnicity")
-    
+
     # Print the original DataFrame
     print("Original DataFrame:")
     print(df.head())
-    
+
     df = df.copy()
-    encoder = OneHotEncoder(categories='auto', sparse=False)
+    encoder = OneHotEncoder(categories="auto", sparse=False)
     encoded_dfs = []
-    
+
     for column in columns_to_encode:
         # Make sure the column is in the DataFrame
         if column not in df.columns:
             print(f"Column {column} not found in DataFrame.")
             continue
-            
+
         encoded = encoder.fit_transform(df[[column]])
-        
+
         # Print the encoded column
         print(f"Encoded {column}:")
         print(encoded)
-        
+
         feature_names = [f"{column}_{category}" for category in encoder.categories_[0]]
-        
+
         # Print feature names
         print(f"Feature names for {column}:")
         print(feature_names)
-        
+
         encoded_data = pd.DataFrame(encoded, columns=feature_names, index=df.index)
         encoded_dfs.append(encoded_data)
-        
+
     new_df = pd.concat(encoded_dfs, axis=1)
     new_df = df.drop(columns_to_encode, axis=1)
-    
+
     # Print the final DataFrame
     print("Final DataFrame:")
     print(new_df.head())
-    
+
     return new_df
+
 
 def feature_engineering(df):
     start_time = time.time()
-    print('=== Feature Engineering =============================================================')
-    print('🔂 Rename Columns')
-    df.rename(columns={'Appointment status': 'Appointment_status', \
-                    'Booked by': 'Booked_by','Appointment time': 'Appointment_time', \
-                    'Rota type': 'Rota','Age in years': 'Age'}, inplace=True)
-    
+    print(
+        "\n=== Feature Engineering ============================================================="
+    )
+    print("🔂 Rename Columns")
+    df.rename(
+        columns={
+            "Appointment status": "Appointment_status",
+            "Booked by": "Booked_by",
+            "Appointment time": "Appointment_time",
+            "Rota type": "Rota",
+            "Age in years": "Age",
+        },
+        inplace=True,
+    )
+
     print("🔂 Drop deseased and deducted")
     # Filter rows where 'Registration status' is 'Current'
     df.drop(df[df["Registration status"] == "Deceased, Deducted"].index, inplace=True)
     df.drop(df[df["Registration status"] == "Deceased"].index, inplace=True)
     df.drop(df[df["Registration status"] == "Deducted"].index, inplace=True)
-    
+
     # Convert Date Columns to DATETIME
-    print('🔂 Columns to Datetime')
-    datetime_cols = ['Appointment booked date', 'Appointment date', 'Registration date']
+    print("🔂 Columns to Datetime")
+    datetime_cols = ["Appointment booked date", "Appointment date", "Registration date"]
     for datetime_col in datetime_cols:
         df[datetime_col] = pd.to_datetime(df[datetime_col])
-    print('🔂 Fix Appointment Time')
-    df['Appointment_time'] = df['Appointment_time'].astype('str')
-    df['Appointment_time'] = df['Appointment_time'].str.split(':').str[0].astype(int)   
-    print('🔂 Map Appointment Status')
-    df['Appointment_status'] = df['Appointment_status'].map(fix_appointment_status).astype(int)
-    print('🔂 book_to_app_days')
-    df['book_to_app_days'] = (df['Appointment date'] - df['Appointment booked date']).dt.total_seconds() / (60*60*24)
+    print("🔂 Fix Appointment Time")
+    df["Appointment_time"] = df["Appointment_time"].astype("str")
+    df["Appointment_time"] = df["Appointment_time"].str.split(":").str[0].astype(int)
+    print("🔂 Map Appointment Status")
+    df["Appointment_status"] = (
+        df["Appointment_status"].map(fix_appointment_status).astype(int)
+    )
+    print("🔂 book_to_app_days")
+    df["book_to_app_days"] = (
+        df["Appointment date"] - df["Appointment booked date"]
+    ).dt.total_seconds() / (60 * 60 * 24)
 
     # df['Appointment_time'] = df['Appointment_time'].astype('str')
     # df['Appointment_time'] = df['Appointment_time'].str.split(':').str[0].astype(int)
-    print('🔂 booked_by_clinician')
-    df['booked_by_clinician'] = (df['Booked_by'] == df['Clinician']).astype(int)
-    
-    print('🔂 Extract Rota Types')
-    df['Rota'] = df['Rota'].map(extract_rota_type)
-    
-    print('🔂 registered_for_months')
-    df['registered_for_months'] = ((pd.Timestamp.now() - df['Registration date']).dt.total_seconds() / (60*60*24*7*30)).apply(np.ceil)
-    
+    print("🔂 booked_by_clinician")
+    df["booked_by_clinician"] = (df["Booked_by"] == df["Clinician"]).astype(int)
+
+    print("🔂 Extract Rota Types")
+    df["Rota"] = df["Rota"].map(extract_rota_type)
+
+    print("🔂 registered_for_months")
+    df["registered_for_months"] = (
+        (pd.Timestamp.now() - df["Registration date"]).dt.total_seconds()
+        / (60 * 60 * 24 * 7 * 30)
+    ).apply(np.ceil)
+
     # print('week month day_of_week')
     # df[['week', 'month', 'day_of_week']] = df['Appointment date'].apply(lambda x: pd.Series([x.week, x.month, x.dayofweek]))
-    print('🔂 Week')
-    df['week'] = df['Appointment date'].dt.isocalendar().week
-    print('🔂 month')
-    df['month'] = df['Appointment date'].dt.month
-    print('🔂 day of week')
-    df['day_of_week'] = df['Appointment date'].dt.dayofweek
+    print("🔂 Week")
+    df["week"] = df["Appointment date"].dt.isocalendar().week
+    print("🔂 Month")
+    df["month"] = df["Appointment date"].dt.month
+    print("🔂 Day of week")
+    df["day_of_week"] = df["Appointment date"].dt.dayofweek
 
-    
     type_cast_cols = {
-        'Appointment_time': 'int',
-        'Age': 'int',
-        'FRAILTY': 'float',
-        'DEPRESSION': 'int',
-        'OBESITY': 'int',
-        'IHD': 'int',
-        'DM': 'int',
-        'HPT': 'int',
-        'NDHG': 'int',
-        'SMI': 'int',
+        "Appointment_time": "int",
+        "Age": "int",
+        "FRAILTY": "float",
+        "DEPRESSION": "int",
+        "OBESITY": "int",
+        "IHD": "int",
+        "DM": "int",
+        "HPT": "int",
+        "NDHG": "int",
+        "SMI": "int",
     }
     for col, col_type in type_cast_cols.items():
         df[col] = df[col].astype(col_type)
-    print('🔂 Convert Cyclical data')
+    print("🔂 Convert Cyclical data")
     # Converting Weeks to Cyclical data
-    cyclical_column = 'week'
+    cyclical_column = "week"
     weeks_in_a_year = 52
-    df['sin_'+cyclical_column] = np.sin(2*np.pi*df[cyclical_column]/weeks_in_a_year)
-    df['cos_'+cyclical_column] = np.cos(2*np.pi*df[cyclical_column]/weeks_in_a_year)
+    df["sin_" + cyclical_column] = np.sin(
+        2 * np.pi * df[cyclical_column] / weeks_in_a_year
+    )
+    df["cos_" + cyclical_column] = np.cos(
+        2 * np.pi * df[cyclical_column] / weeks_in_a_year
+    )
     df.drop(cyclical_column, axis=1, inplace=True)
 
     # Converting Appointment_time to Cyclical data
-    cyclical_column = 'Appointment_time'
+    cyclical_column = "Appointment_time"
     hrs_day = 24
-    df['sin_'+cyclical_column] = np.sin(2*np.pi*df[cyclical_column]/hrs_day)
-    df['cos_'+cyclical_column] = np.cos(2*np.pi*df[cyclical_column]/hrs_day)
+    df["sin_" + cyclical_column] = np.sin(2 * np.pi * df[cyclical_column] / hrs_day)
+    df["cos_" + cyclical_column] = np.cos(2 * np.pi * df[cyclical_column] / hrs_day)
     df.drop(cyclical_column, axis=1, inplace=True)
 
     # Convertingmonth to Cyclical data
-    cyclical_column = 'month'
+    cyclical_column = "month"
     months_in_a_year = 12
-    df['sin_'+cyclical_column] = np.sin(2*np.pi*df[cyclical_column]/months_in_a_year)
-    df['cos_'+cyclical_column] = np.cos(2*np.pi*df[cyclical_column]/months_in_a_year)
+    df["sin_" + cyclical_column] = np.sin(
+        2 * np.pi * df[cyclical_column] / months_in_a_year
+    )
+    df["cos_" + cyclical_column] = np.cos(
+        2 * np.pi * df[cyclical_column] / months_in_a_year
+    )
     df.drop(cyclical_column, axis=1, inplace=True)
 
-    cyclical_column = 'day_of_week'
+    cyclical_column = "day_of_week"
     day_per_week = 7
-    df['sin_'+cyclical_column] = np.sin(2*np.pi*df[cyclical_column]/day_per_week)
-    df['cos_'+cyclical_column] = np.cos(2*np.pi*df[cyclical_column]/day_per_week)
+    df["sin_" + cyclical_column] = np.sin(
+        2 * np.pi * df[cyclical_column] / day_per_week
+    )
+    df["cos_" + cyclical_column] = np.cos(
+        2 * np.pi * df[cyclical_column] / day_per_week
+    )
     df.drop(cyclical_column, axis=1, inplace=True)
-    print('🔂 Adding NO Shows Column')
+    print("🔂 Adding NO Shows Column")
     # Filter to only rows where status = 0 (no-show)
-    noshow = df[df['Appointment_status'] == 0]
+    noshow = df[df["Appointment_status"] == 0]
 
     # Group by Patient ID and count no-shows
-    no_show_count = noshow.groupby('Patient ID')['Appointment_status'].count().reset_index(name='No_shows')
-    df = df.merge(no_show_count, how='left', on='Patient ID').fillna(0)
-    
-    print('🔂 Drop Column no longer needed')
-    df.drop(columns=['Appointment booked date', 'Appointment date', 'Booked_by', 'Clinician', 'app datetime', 'Postcode', 'Registration date', 'Language', 'Latitude', 'Longitude', 'NHS number','Patient ID', 'Registration status'], inplace=True)
-    
+    no_show_count = (
+        noshow.groupby("Patient ID")["Appointment_status"]
+        .count()
+        .reset_index(name="No_shows")
+    )
+    df = df.merge(no_show_count, how="left", on="Patient ID").fillna(0)
+
+    print("🔂 Drop Column no longer needed")
+    df.drop(
+        columns=[
+            "Appointment booked date",
+            "Appointment date",
+            "Booked_by",
+            "Clinician",
+            "app datetime",
+            "Postcode",
+            "Registration date",
+            "Language",
+            "Latitude",
+            "Longitude",
+            "NHS number",
+            # "Patient ID",
+            "Registration status",
+        ],
+        inplace=True,
+    )
+
     pre_drop = df.shape[0]
-    boolean_mask = (df['Rota'] != 'DROP')
+    boolean_mask = df["Rota"] != "DROP"
     # Applying the boolean filteraing
     df = df[boolean_mask].reset_index(drop=True)
     df.reset_index(inplace=True, drop=True)
     post_drop = df.shape[0]
-    print(f'🔂 Rows dropped from Rotas other than spec: {pre_drop - post_drop}')
+    print(f"🔂 Rows dropped from Rotas other than spec: {pre_drop - post_drop}")
 
     pre_drop = df.shape[0]
-    df.drop(df[df['book_to_app_days'] < 0].index, inplace=True)
+    df.drop(df[df["book_to_app_days"] < 0].index, inplace=True)
     df.reset_index(inplace=True, drop=True)
     post_drop = df.shape[0]
-    print(f'🔂 Rows from with Negative book_to_app_days: {pre_drop - post_drop}')
-    
-    print(f'🔂 Labelencode Column Sex')
+    print(f"🔂 Rows from with Negative book_to_app_days: {pre_drop - post_drop}")
+
+    print(f"🔂 Drop rows with Sex Unknonw & Indeterminate")
+    df = df[~df["Sex"].isin(["Indeterminate", "Unknown"])]
+
+    print(f"🔂 Labelencode Column Sex")
     le = LabelEncoder()
-    df['Sex'] = le.fit_transform(df['Sex'])
-    
-    print(f'🔂 OneHotEncode Column Rota')
+    df["Sex"] = le.fit_transform(df["Sex"])
+
+    print(f"🔂 OneHotEncode Rota types")
     # OneHotEncode Rota
-    ohe = OneHotEncoder(handle_unknown='ignore')
-    encoded = ohe.fit_transform(df[['Rota']]).toarray()
+    ohe = OneHotEncoder(handle_unknown="ignore")
+    encoded = ohe.fit_transform(df[["Rota"]]).toarray()
     # Create feature names manually
     feature_names = [f"Rota_{category}" for category in ohe.categories_[0]]
 
@@ -366,14 +422,15 @@ def feature_engineering(df):
     # Concatenate the original DataFrame and the encoded DataFrame
     df = pd.concat([df, encoded_data], axis=1)
     # Drop the original column
-    df = df.drop(['Rota'], axis=1)  
-    print(f'🔂 Extract Ethnicity Category')
-    df['Ethnicity category'] = df['Ethnicity category'].apply(extract_ethnicity)    
-    
-    print(f'🔂 OneHotEncode Ethnicity')
+    df = df.drop(["Rota"], axis=1)
+    print(f"🔂 Extract Ethnicity Category")
+    df["Ethnicity category"] = df["Ethnicity category"].fillna("").astype(str)
+    df["Ethnicity category"] = df["Ethnicity category"].apply(extract_ethnicity)
+
+    print(f"🔂 OneHotEncode Ethnicity")
     # OneHotEncode Rota
-    ohe = OneHotEncoder(handle_unknown='ignore')
-    encoded = ohe.fit_transform(df[['Ethnicity category']]).toarray()
+    ohe = OneHotEncoder(handle_unknown="ignore")
+    encoded = ohe.fit_transform(df[["Ethnicity category"]]).toarray()
     # Create feature names manually
     feature_names = [f"Ethnicity_{category}" for category in ohe.categories_[0]]
     # Convert the encoded array back into a DataFrame
@@ -381,10 +438,13 @@ def feature_engineering(df):
     # Concatenate the original DataFrame and the encoded DataFrame
     df = pd.concat([df, encoded_data], axis=1)
     # Drop the original column
-    df = df.drop(['Ethnicity category'], axis=1)
-    
+    df = df.drop(["Ethnicity category"], axis=1)
+
+    print(f"🔂 Drop NaN")
+    df.dropna(inplace=True)
+
     print("💾 Saving to output_data/full_train_data.csv...")
-    df.to_csv(f"{OUTPUT_DATA}full_train_data.csv", index=False)
+    df.to_csv(f"{OUTPUT_DATA}/full_train_data.csv", index=False)
     end_time = time.time()
     print(f"✅ Done in {round((end_time - start_time),2)} sec {df.shape}")
     return df

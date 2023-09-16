@@ -13,7 +13,7 @@ def make_disease_register(surgery_list=["ECS", "TCP", "TGP", "SMW", "KMC", "HPVM
 
     disease_register = []
     for surgery in surgery_list:
-        register_path = f"{RAW_DATA}{surgery}/{surgery}"
+        register_path = f"{RAW_DATA}/{surgery}/{surgery}"
 
         idnhs = pd.read_excel(f"{register_path}_NHS_PTID.xlsx", dtype="str")
         idnhs.dropna(inplace=True)
@@ -53,11 +53,16 @@ def make_disease_register(surgery_list=["ECS", "TCP", "TGP", "SMW", "KMC", "HPVM
 
     global_register = pd.concat(disease_register, axis=0, ignore_index=True)
     print(f"🔂 Concat Registers")
-    global_register.dropna(inplace=True)
     print(f"❌ Drop NaN")
+    global_register.dropna(inplace=True)
+    
+    print('❌ Drop Duplicates on column Patient ID')
+    global_register.drop_duplicates(subset='Patient ID', keep='first', inplace=True)
+    
     print("💾 Saving to output_data/global_disease_register.csv...")
-    register_out = f"{OUTPUT_DATA}global_disease_register.csv"
+    register_out = f"{OUTPUT_DATA}/global_disease_register.csv"
     global_register.to_csv(register_out, index=False)
+    
     end_time = time.time()
     print(f"✅ Done in {round((end_time - start_time),2)} sec {global_register.shape}")
     return global_register

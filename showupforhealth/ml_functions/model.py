@@ -1,22 +1,12 @@
 import streamlit as st
 import joblib
 import numpy as np
+from showupforhealth.params import *
 
-def predict_model(MODEL_OUTPUT, df):
-  """Loads a model from a .h5 file and makes predictions on the given input data.
 
-  Args:
-    model_weight_file: The path to the .h5 file containing the model weights.
-    input_data: A NumPy array containing the input data.
+import keras
 
-  Returns:
-    A NumPy array containing the predicted output.
-  """
-
-  # Load the model.
-  model = joblib.load(MODEL_OUTPUT)
-
-  # Make predictions.
-  predictions = model.predict(df)
-
-  return predictions
+@st.cache(allow_output_mutation=True)
+def predict_model():
+    model = keras.models.load_model(MODEL_OUTPUT)
+    return model

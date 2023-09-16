@@ -285,9 +285,9 @@ def add_noshows(df):
     noshows = pd.read_csv(f"{OUTPUT_DATA}/no_shows_db.csv")
     merged = df.merge(noshows, on="Patient ID", how="left")
     countin = merged.shape[0]
-    merged.dropna(inplace=True)
+    merged = merged.fillna(0)
     countout = merged.shape[0]
-    print(f"❌ Drop NaN - No Shows Merge = {countin - countout}")
+    print(f"⛽️ Fill NaN (0) - No Shows Merge")
 
     return merged
 

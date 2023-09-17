@@ -22,11 +22,26 @@ def f1_score(y_true, y_pred):
     f1_val = 2 * (precision * recall) / (precision + recall + K.epsilon())
     return f1_val
 
+def sort_df_columns(df):
+    new_df = df[
+        ['Patient ID', 'temp', 'precipitation', 'Age',
+       'Sex', 'FRAILTY', 'DEPRESSION', 'OBESITY', 'IHD', 'DM', 'HPT', 'NDHG',
+       'SMI', 'IMD2023', 'dist_to_station', 'distance_to_surg',
+       'book_to_app_days', 'booked_by_clinician', 'registered_for_months',
+       'sin_week', 'cos_week', 'sin_Appointment_time', 'cos_Appointment_time',
+       'sin_month', 'cos_month', 'sin_day_of_week', 'cos_day_of_week',
+       'No_shows', 'Rota_ARRS', 'Rota_GP', 'Rota_HCA', 'Rota_Nurse',
+       'Ethnicity_Asian', 'Ethnicity_Black', 'Ethnicity_Mixed',
+       'Ethnicity_Other', 'Ethnicity_White'
+        ]
+    ]
+    return new_df
+
 def scaler_model_predict(df):
     print(Fore.GREEN + '\n▶️ Select Scaler + Model:')
     print(Fore.GREEN + '1. jan_scaler_17sept23 + model16sept23_jan')
     print(Fore.GREEN + '2. Empty')
-    print(Fore.GREEN + '3. Empty')
+    print(Fore.GREEN + '3. Jan Model 17 Sept with Patient ID')
     scaler_no = input(Fore.RED + 'Enter Selection: ')
     print(Style.RESET_ALL)
     
@@ -47,8 +62,14 @@ def scaler_model_predict(df):
     
     elif scaler_no == '3':
         # Load scaler and model 3
-        print('Note a valid saler + model selection.') 
-        pass  
+        scaler = load(f'{MODEL_OUTPUT}/jan_scaler_17sept23withptid.pkl')
+        model = load_model(f'{MODEL_OUTPUT}/model_weights_with_ptid2023-09-17 18-01-09.h5', custom_objects={'f1_score': f1_score})
+        
+        df = sort_df_columns(df)
+        df = transform_data(df, scaler)
+        df = df.astype('float32')
+        predictions = model.predict(df)
+        return predictions 
     
     else:
         print('Note a valid saler + model selection.')
@@ -92,12 +113,15 @@ if __name__ == "__main__":
     surgery_prefix = input(Fore.RED + 'Enter Surgery Prefix to continue: ')   
     print(Style.RESET_ALL)
     
-    X_temp = streamlit_predict(surgery_prefix)
-    X_new = X_temp.drop(columns='Patient ID')
-    pt_id = X_temp[["Patient ID"]]
+    X_new = streamlit_predict(surgery_prefix)
+    # X_new = X_temp.drop(columns='Patient ID')
+    # pt_id = X_temp[["Patient ID"]]
+
     X_new.shape
     
     # Load Scaler
     predictions = scaler_model_predict(X_new)
     class_labels = display_threshold_info(predictions)
-    display(display_outcome_df(class_labels, pt_id))
+    df = display_outcome_df(class_labels, pt_id)
+    display(df)
+    display(df['Appointment status'].value_counts())

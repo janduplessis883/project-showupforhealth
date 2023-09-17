@@ -55,14 +55,14 @@ def make_disease_register(surgery_list=["ECS", "TCP", "TGP", "SMW", "KMC", "HPVM
     print(f"🔂 Concat Registers")
     print(f"❌ Drop NaN")
     global_register.dropna(inplace=True)
-    
-    print('❌ Drop Duplicates on column Patient ID')
-    global_register.drop_duplicates(subset='Patient ID', keep='first', inplace=True)
-    
+
+    print("❌ Drop Duplicates on column Patient ID")
+    global_register.drop_duplicates(subset="Patient ID", keep="last", inplace=True)
+
     print("💾 Saving to output_data/global_disease_register.csv...")
     register_out = f"{OUTPUT_DATA}/global_disease_register.csv"
     global_register.to_csv(register_out, index=False)
-    
+
     end_time = time.time()
     print(f"✅ Done in {round((end_time - start_time),2)} sec {global_register.shape}")
     return global_register

@@ -1,40 +1,41 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+
 import time
+import os
+
+from showupforhealth.ml_functions import *
+from showupforhealth.ml_functions.predict import *
+from showupforhealth.params import *
+from showupforhealth.utils import *
+from showupforhealth.ml_functions.encoders import *
+from showupforhealth.ml_functions.model import *
+
+from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import OneHotEncoder
+
 
 # Page title
 st.title("Show up for Health")
 
 # Drop down menu for clinics
-clinic_option = st.selectbox(
+surgery_prefix = st.selectbox(
     "Which clinic would you like to select?",
     ("ECS", "HPVM", "KMC", "SMW", "TCP", "TGP"),
 )
 
-st.write("You selected:", clinic_option)
-
-# Uploaded banner
-uploaded_file = st.file_uploader("Upload your file here")
-
-# Creating a progress bar whilst the file is being uploaded
-my_bar = st.progress(0)
-
-success_text = "File uploaded successfully!"
-
-for percent_complete in range(100):
-    time.sleep(0.08)
-    my_bar.progress(percent_complete + 1)
-
-st.success(success_text)
-
-# Turning the uploaded file into a dataframe
-if uploaded_file:
-    df = pd.read_csv(uploaded_file)
-    st.write(df)
-
+# Print selected clinic
+st.write("You selected:", surgery_prefix)
 
 # Create a button, when clicked, run prediction
+if st.button("Predict"):
+    # Use model to predict
+    prediction = predict_model()
+
+    # Display prediction
+    st.write(f"Prediction: {prediction}")
+
 
 # Load the trained model (replace with your model file)
 # model = model_name()
@@ -44,17 +45,6 @@ if uploaded_file:
 # feature1 = st.number_input('Input feature 1')
 # feature2 = st.number_input('Input feature 2')
 # feature3 = st.number_input('Input feature 3')
-
-
-st.button("Predict")
-#     # Reshape inputs to match model's input shape
-#     data = np.array([feature1, feature2, feature3]).reshape(1, -1)
-
-#     # Use model to predict
-#     prediction = model.predict(data)
-
-#     # Display prediction
-#     st.write(f'Prediction: {prediction}')
 
 
 # Button to download the dataframe as a csv file

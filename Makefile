@@ -26,6 +26,12 @@ app:
 predict:
 	python showupforhealth/ml_functions/predict.py
 
+model_predict:
+	python showupforhealth/interface/model_predict.py
+
+model_train:
+	python showupforhealth/interface/model_train.py
+
 test:
 	@pytest -v tests
 

@@ -33,7 +33,7 @@ from sklearn.inspection import permutation_importance
 from tpot import TPOTClassifier
 from datetime import datetime
 
-
+from showupforhealth.params import *
 import numpy as np
 import pandas as pd
 from IPython.core.display import display, HTML
@@ -497,3 +497,55 @@ def evaluate_classification_model(model, X, y, cv=5):
     print(f"F1 Score: {f1:.2f}")
 
     print(f"F1 Score: {f1:.2f}")
+
+
+def make_no_show_db():
+    data = pd.read_csv(f"{OUTPUT_DATA}/full_train_data.csv")
+    noshows = data[["Patient ID", "No_shows"]].astype("int")
+    unique_ids = noshows.drop_duplicates(keep="first")
+    unique_ids.to_csv(f"{OUTPUT_DATA}/no_shows_db.csv", index=False)
+    print("💾 No Show Database saved to OUTPUT-DATA no_shows_db.csv")
+
+
+def sort_df_columns(df):
+    new_df = df[
+        [
+            "temp",
+            "precipitation",
+            "Age",
+            "Sex",
+            "FRAILTY",
+            "DEPRESSION",
+            "OBESITY",
+            "IHD",
+            "DM",
+            "HPT",
+            "NDHG",
+            "SMI",
+            "IMD2023",
+            "dist_to_station",
+            "distance_to_surg",
+            "book_to_app_days",
+            "booked_by_clinician",
+            "registered_for_months",
+            "sin_week",
+            "cos_week",
+            "sin_Appointment_time",
+            "cos_Appointment_time",
+            "sin_month",
+            "cos_month",
+            "sin_day_of_week",
+            "cos_day_of_week",
+            "No_shows",
+            "Rota_ARRS",
+            "Rota_GP",
+            "Rota_HCA",
+            "Rota_Nurse",
+            "Ethnicity_Asian",
+            "Ethnicity_Black",
+            "Ethnicity_Mixed",
+            "Ethnicity_Other",
+            "Ethnicity_White",
+        ]
+    ]
+    return new_df

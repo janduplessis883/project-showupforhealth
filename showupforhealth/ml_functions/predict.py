@@ -76,6 +76,71 @@ def predict_add_weather(surgery_prefix):
         return df
 
 
+def predict_add_weather_from_df(df):
+    print(
+        f"=== 🌤️ Prediction: {surgery_prefix} - preparing appointment data for weather ========="
+    )
+
+    print(
+        f"👩🏻‍🦰 Appointments: {df.shape[0]} 🧑🏻‍🦰 Unique Patient IDs; {df['Patient ID'].nunique()}"
+    )
+    df["weather_time"] = df["Appointment time"].str.split("-").str[0]
+    df["weather_datetime"] = df["Appointment date"] + " " + df["weather_time"]
+    df["Appointment date"] = pd.to_datetime(df["Appointment date"])
+    df["weather_datetime"] = pd.to_datetime(df["weather_datetime"])
+    start_date = df["Appointment date"].dt.strftime("%Y-%m-%d").min()
+    end_date = df["Appointment date"].dt.strftime("%Y-%m-%d").max()
+
+    # Getting API Data
+    # Define the base URL of the API
+    base_url = "https://api.open-meteo.com/v1/forecast"
+
+    # Define the parameters as a dictionary
+    params = {
+        "latitude": "51.5085",
+        "longitude": "0.1257",
+        "hourly": "temperature_2m,precipitation",
+        "start_date": start_date,
+        "end_date": end_date
+        # Add more parameters as needed
+    }
+
+    # Make the API call using the requests library
+    response = requests.get(base_url, params=params)
+    print(f"🛜 Requesting forcast from Open-Meteo Weather API {start_date} - {end_date}")
+    # Check if the request was successful (status code 200)
+    if response.status_code == 200:
+        # Parse and work with the API response, which is typically in JSON format
+        api_data = response.json()["hourly"]
+        # Now you can work with the data returned by the API
+        api_data = pd.DataFrame(api_data)
+    else:
+        # If the request was not successful, handle the error
+        print(f"Error: {response.status_code}")
+        print(response.text)
+
+    api_data = api_data.rename(
+        columns={
+            "time": "weather_datetime",
+            "temperature_2m": "temp",
+            "precipitation": "precipitation",
+        }
+    )
+    api_data["weather_datetime"] = pd.to_datetime(api_data["weather_datetime"])
+
+    # Merging dataframes
+    print(f"🔂 Merge weather + appointment data")
+    df = data.merge(api_data, how="left", on="weather_datetime")
+    nanindf = df.isna().sum()
+
+    if nanindf.sum() > 0:
+        print(f"❌ NaN values in df - ERROR: {nanindf}")
+    else:
+        print("✅ Successful: return df")
+        df["Patient ID"] = df["Patient ID"].astype("int")
+        return df
+
+
 def predict_add_global_register(df):
     print(f"👉 Appointment DF in: {df.shape}")
     register = pd.read_csv(f"{OUTPUT_DATA}/global_disease_register.csv", dtype="str")

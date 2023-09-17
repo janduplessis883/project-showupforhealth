@@ -34,7 +34,7 @@ if st.button("Predict"):
     prediction = predict_model()
 
     # Display prediction
-    st.write(f'Prediction: {prediction}')
+    st.write(f"Prediction: {prediction}")
 
 
 # Load the trained model (replace with your model file)
@@ -45,8 +45,6 @@ if st.button("Predict"):
 # feature1 = st.number_input('Input feature 1')
 # feature2 = st.number_input('Input feature 2')
 # feature3 = st.number_input('Input feature 3')
-
-
 
 
 # Button to download the dataframe as a csv file

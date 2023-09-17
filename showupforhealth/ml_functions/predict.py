@@ -74,11 +74,13 @@ def predict_add_weather(surgery_prefix):
         print("✅ Successful: return df")
         df["Patient ID"] = df["Patient ID"].astype("int")
         return df
-    
-def predict_add_weather_from_df(df):
 
-    print(f"=== 🌤️ Prediction: {surgery_prefix} - preparing appointment data for weather =========")
-  
+
+def predict_add_weather_from_df(df):
+    print(
+        f"=== 🌤️ Prediction: {surgery_prefix} - preparing appointment data for weather ========="
+    )
+
     print(
         f"👩🏻‍🦰 Appointments: {df.shape[0]} 🧑🏻‍🦰 Unique Patient IDs; {df['Patient ID'].nunique()}"
     )
@@ -371,6 +373,7 @@ def make_predict():
     df = predict_feature_engineering(df)
     test_predict(df)
     return df
+
 
 def streamlit_predict(surgery_prefix):
     df = predict_add_weather(surgery_prefix=surgery_prefix)

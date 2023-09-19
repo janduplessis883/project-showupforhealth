@@ -44,27 +44,15 @@ def extract_rota_type(text):
     # Apply extract_role function and overwrite Rota type column
     # full_appointments['Rota type'] = full_appointments['Rota type'].apply(extract_rota_type)
     role_map = {
-        "GP": [
-            "GP",
-            "Registrar",
-            "Urgent",
-            "Telephone",
-            "111",
-            "FY2",
-            "F2",
-            "Extended Hours",
-            "GP Clinic",
-            "Session",
-        ],
+        "GP": ["GP", "Urgent", "GP Clinic"],
         "Nurse": ["Nurse", "Nurse Practitioner"],
-        "HCA": ["HCA", "Health Care Assistant", "Phlebotomy"],
+        "HCA": ["HCA", "Session"],
         "ARRS": [
-            "Pharmacist",
-            "Paramedic",
             "Physiotherapist",
             "Physicians Associate",
             "ARRS",
-            "PCN",
+            "Clinical Pharmacist",
+            "Pharmacist",
         ],
     }
 
@@ -73,6 +61,7 @@ def extract_rota_type(text):
             if re.search(pattern, text):
                 return role
     return "DROP"
+
 
 def fix_appointment_status(status):
     """
@@ -84,25 +73,43 @@ def fix_appointment_status(status):
     Returns:
         int: Returns 1 if status is in ['In Progress', 'Arrived', 'Patient Walked Out', 'Finished', 'Waiting'], 0 if status is 'Did Not Attend' or 'ERROR' otherwise.
     """
-    if status in ['In Progress', 'Arrived', 'Patient Walked Out', 'Finished', 'Waiting']:
+    if status in [
+        "In Progress",
+        "Arrived",
+        "Patient Walked Out",
+        "Finished",
+        "Waiting",
+    ]:
         return 1
-    elif status == 'Did Not Attend':
+    elif status == "Did Not Attend":
         return 0
-    
+
+
 def extract_ethnicity(text):
     # HOW TO APPLY IT
     # Apply extract_role function and overwrite Rota type column
-    # full_appointments['Rota type'] = full_appointments['Rota type'].apply(extract_rota_type)     
+    # full_appointments['Rota type'] = full_appointments['Rota type'].apply(extract_rota_type)
     ethnicity_dict = {
-    "White": ['Other White', 'British or Mixed British', 'Irish'],
-    "Black": ['African','Other Black','Caribbean'],
-    "Mixed": ['Other Mixed','White & Asian','White & Black African','White & Black Caribbean'],
-    "Asian": ['Other Asian','Indian or British Indian','Pakistani or British Pakistani','Chinese', 'Bangladeshi or British Bangladeshi'],
-    "Other": ['Other']
-    }   
+        "White": ["Other White", "British or Mixed British", "Irish"],
+        "Black": ["African", "Other Black", "Caribbean"],
+        "Mixed": [
+            "Other Mixed",
+            "White & Asian",
+            "White & Black African",
+            "White & Black Caribbean",
+        ],
+        "Asian": [
+            "Other Asian",
+            "Indian or British Indian",
+            "Pakistani or British Pakistani",
+            "Chinese",
+            "Bangladeshi or British Bangladeshi",
+        ],
+        "Other": ["Other"],
+    }
 
     for role, patterns in ethnicity_dict.items():
         for pattern in patterns:
             if re.search(pattern, text):
                 return role
-    return 'Unknown'
+    return "Other"

@@ -20,6 +20,17 @@ disease_register:
 train_data:
 	python showupforhealth/ml_functions/data.py
 
+app:
+	@streamlit run showupforhealth/interface/app.py
+
+predict:
+	python showupforhealth/ml_functions/predict.py
+
+model_predict:
+	python showupforhealth/interface/model_predict.py
+
+model_train:
+	python showupforhealth/interface/model_train.py
 
 test:
 	@pytest -v tests

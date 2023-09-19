@@ -17,7 +17,9 @@ def create_global_appointments_list(
         print(f"⏺️ {surgery_prefix} -", end=" ")
         df_list = []
         for i in range(1, 10, 1):
-            app = pd.read_csv(f"{RAW_DATA}{surgery_prefix}/{surgery_prefix}_APP{i}.csv")
+            app = pd.read_csv(
+                f"{RAW_DATA}/{surgery_prefix}/{surgery_prefix}_APP{i}.csv"
+            )
             print(f"df {i} ", end=" ")
             df_list.append(app)
 
@@ -62,14 +64,13 @@ def make_full_preprocess_data():
     print(f"↔️ Merge Appointments and Global_Disease_Register {full_df.shape}")
     full_df.dropna(inplace=True)
     print(f"❌ Drop NaN {full_df.shape}")
-    full_path = f"{OUTPUT_DATA}full_preprocess_data.csv"
+    full_path = f"{OUTPUT_DATA}/full_preprocess_data.csv"
 
     print(f"💾 Saving to output_data/full_preprocess_data.csv...")
     full_df.to_csv(full_path, index=False)
     end_time = time.time()
     print(f"✅ Done in {round((end_time - start_time),2)} sec {full_df.shape}")
     return full_df
-
 
 
 if __name__ == "__main__":

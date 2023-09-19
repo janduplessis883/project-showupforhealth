@@ -1,0 +1,126 @@
+wandb_version: 1
+
+layer_1:
+  desc: null
+  value: 64
+activation_1:
+  desc: null
+  value: relu
+dropout:
+  desc: null
+  value: 0.4152018854119111
+layer_2:
+  desc: null
+  value: 128
+activation_2:
+  desc: null
+  value: relu
+layer_3:
+  desc: null
+  value: 80
+activation_3:
+  desc: null
+  value: relu
+layer_4:
+  desc: null
+  value: 16
+activation_4:
+  desc: null
+  value: relu
+layer_5:
+  desc: null
+  value: 64
+activation_5:
+  desc: null
+  value: relu
+optimizer:
+  desc: null
+  value: adam
+loss:
+  desc: null
+  value: binary_crossentropy
+metric:
+  desc: null
+  value: accuracy
+epoch:
+  desc: null
+  value: 80
+batch_size:
+  desc: null
+  value: 128
+_wandb:
+  desc: null
+  value:
+    python_version: 3.10.6
+    cli_version: 0.15.10
+    framework: keras
+    is_jupyter_run: true
+    is_kaggle_kernel: false
+    start_time: 1694261687.20418
+    t:
+      1:
+      - 2
+      - 3
+      - 5
+      - 53
+      - 55
+      - 105
+      2:
+      - 2
+      - 3
+      - 5
+      - 53
+      - 55
+      - 105
+      3:
+      - 2
+      - 7
+      - 16
+      - 23
+      - 38
+      - 39
+      4: 3.10.6
+      5: 0.15.10
+      8:
+      - 1
+      - 5
+    m:
+    - 1: batch/batch_step
+      6:
+      - 3
+    - 1: batch/loss
+      5: 1
+      6:
+      - 1
+    - 1: batch/cross entropy
+      5: 1
+      6:
+      - 1
+    - 1: batch/f1_score
+      5: 1
+      6:
+      - 1
+    - 1: batch/accuracy
+      5: 1
+      6:
+      - 1
+    - 1: batch/precision
+      5: 1
+      6:
+      - 1
+    - 1: batch/recall
+      5: 1
+      6:
+      - 1
+    - 1: batch/auc
+      5: 1
+      6:
+      - 1
+    - 1: batch/prc
+      5: 1
+      6:
+      - 1
+    - 1: batch/learning_rate
+      5: 1
+      6:
+      - 1

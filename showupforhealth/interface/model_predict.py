@@ -24,7 +24,7 @@ def f1_score(y_true, y_pred):
 
 def sort_df_columns(df):
     new_df = df[
-        ['Patient ID', 'temp', 'precipitation', 'Age',
+        ['temp', 'precipitation', 'Age',
        'Sex', 'FRAILTY', 'DEPRESSION', 'OBESITY', 'IHD', 'DM', 'HPT', 'NDHG',
        'SMI', 'IMD2023', 'dist_to_station', 'distance_to_surg',
        'book_to_app_days', 'booked_by_clinician', 'registered_for_months',
@@ -113,9 +113,9 @@ if __name__ == "__main__":
     surgery_prefix = input(Fore.RED + 'Enter Surgery Prefix to continue: ')   
     print(Style.RESET_ALL)
     
-    X_new = streamlit_predict(surgery_prefix)
-    # X_new = X_temp.drop(columns='Patient ID')
-    # pt_id = X_temp[["Patient ID"]]
+    X_temp = streamlit_predict(surgery_prefix)
+    X_new = X_temp.drop(columns='Patient ID')
+    pt_id = X_temp[["Patient ID"]]
 
     X_new.shape
     

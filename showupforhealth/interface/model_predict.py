@@ -71,8 +71,8 @@ def sort_df_columns(df):
 def scaler_model_predict(df):
     print(Fore.GREEN + "\n▶️ Select Scaler + Model:")
     print(Fore.GREEN + "1. jan_scaler_17sept23 + model16sept23_jan")
-    print(Fore.GREEN + "2. Jan 256 512 NN 21 Sept")
-    print(Fore.GREEN + "3. Jan Model 17 Sept with Patient ID")
+    print(Fore.GREEN + "2. Jan Backup 22 Sept 9am")
+    print(Fore.GREEN + "3. Gentle Water undersample 0.15")
     scaler_no = input(Fore.RED + "Enter Selection: ")
     print(Style.RESET_ALL)
 
@@ -91,9 +91,9 @@ def scaler_model_predict(df):
 
     elif scaler_no == "2":
         # Load scaler and model 3
-        scaler = load(f"{MODEL_OUTPUT}/jan_scaler_21sept23withptid.pkl")
+        scaler = load(f"{MODEL_OUTPUT}/jan_scaler_22sept239am1664.pkl")
         model = load_model(
-            f"{MODEL_OUTPUT}/model_weights_with_ptid2023-09-21 18-00-32.h5",
+            f"{MODEL_OUTPUT}/model_weights_9am16642023-09-22 09-01-10.h5",
             custom_objects={"f1_score": f1_score},
         )
 
@@ -105,9 +105,9 @@ def scaler_model_predict(df):
 
     elif scaler_no == "3":
         # Load scaler and model 3
-        scaler = load(f"{MODEL_OUTPUT}/jan_scaler_17sept23withptid.pkl")
+        scaler = load(f"{MODEL_OUTPUT}/jan_scaler_22sept239am1664.pkl")
         model = load_model(
-            f"{MODEL_OUTPUT}/model_weights_with_ptid2023-09-17 18-01-09.h5",
+            f"{MODEL_OUTPUT}/model_weights_gentle_water2023-09-22 10-37-13.h5",
             custom_objects={"f1_score": f1_score},
         )
 
@@ -179,7 +179,7 @@ if __name__ == "__main__":
     # Function to apply the styling
     def highlight_duplicates(s):
         is_duplicated = s.duplicated(keep=False)  # mark all duplicates as True
-        return ["background-color: #aec867" if v else "" for v in is_duplicated]
+        return ["background-color: #f4ba41" if v else "" for v in is_duplicated]
 
     # Apply the styling
     styled_df = new.style.apply(highlight_duplicates, subset=["Patient ID"])

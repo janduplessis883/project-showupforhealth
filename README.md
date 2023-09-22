@@ -1,4 +1,4 @@
-<img src="https://github.com/janduplessis883/project-showupforhealth/blob/master/images/Show%20Up%20for%20Health.png?raw=true" width=750>
+<img src="https://github.com/janduplessis883/project-showupforhealth/blob/master/images/Show%20Up%20for%20Health.png?raw=true" width=800>
 
 The United Kingdom's National Health Service (NHS) is a behemoth in the healthcare sector, providing primary, secondary, and tertiary care to millions of residents. With this vast reach and immense responsibility, efficient resource utilization is crucial. One aspect of resource allocation that has attracted attention over the years is missed appointments, colloquially known as "Did Not Attend" (DNA) events. These DNAs are reported to cost the NHS approximately £1 billion annually, a substantial figure that has the potential to be reduced with the right interventions.
 

@@ -158,9 +158,9 @@ if __name__ == "__main__":
     print(Fore.BLUE + "HPVN - Health Partners at Violet Melchett")
     surgery_prefix = input(Fore.RED + "Enter Surgery Prefix to continue: ")
     print(Style.RESET_ALL)
-
+    
     X_temp = streamlit_predict(surgery_prefix)
-    X_new = X_temp.drop(columns="Patient ID")
+    X_new = X_temp.drop(columns='Patient ID')
     pt_id = X_temp[["Patient ID"]]
 
     X_new.shape

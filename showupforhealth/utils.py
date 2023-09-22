@@ -283,37 +283,35 @@ def sample_df(df, n_samples):
         return sampled_df
 
 
-def automl_tpot(X, y):
-    # Select features and target
-    features = X
-    target = y
+# def automl_tpot(X, y):
+#     # Select features and target
+#     features = X
+#     target = y
 
-    # Split the dataset into training and test sets
-    X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.2)
+#     # Split the dataset into training and test sets
+#     X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.2)
 
-    # Create a tpot object with a few generations and population size.
-    tpot = TPOTClassifier(
-        generations=5, population_size=50, verbosity=2, random_state=42
-    )
+#     # Create a tpot object with a few generations and population size.
+#     tpot = TPOTClassifier(generations=5, population_size=50, verbosity=2, random_state=42)
 
-    # Fit the tpot model on the training data
-    tpot.fit(X_train, y_train)
+    # # Fit the tpot model on the training data
+    # tpot.fit(X_train, y_train)
 
-    # Show the final model
-    print(tpot.fitted_pipeline_)
+    # # Show the final model
+    # print(tpot.fitted_pipeline_)
 
-    # Use the fitted model to make predictions on the test dataset
-    test_predictions = tpot.predict(X_test)
+    # # Use the fitted model to make predictions on the test dataset
+    # test_predictions = tpot.predict(X_test)
 
-    # Evaluate the model
-    print(tpot.score(X_test, y_test))
+    # # Evaluate the model
+    # print(tpot.score(X_test, y_test))
 
-    # Export the pipeline as a python script file
-    time = datetime().now()
-    root_dir = os.path.dirname(os.path.abspath(__file__))
-    output_dir = f"pipelines/tpot_pipeline_{time}.csv"
-    output_path = os.path.join(root_dir, output_dir)
-    tpot.export(output_path)
+    # # Export the pipeline as a python script file
+    # time = datetime().now()
+    # root_dir = os.path.dirname(os.path.abspath(__file__))
+    # output_dir = f'pipelines/tpot_pipeline_{time}.csv'
+    # output_path = os.path.join(root_dir, output_dir)
+    # tpot.export(output_path)
 
 
 def train_val_test_split(X, y, val_size=0.2, test_size=0.2, random_state=42):
@@ -505,6 +503,5 @@ def make_no_show_db():
     unique_ids = noshows.drop_duplicates(keep="first")
     unique_ids.to_csv(f"{OUTPUT_DATA}/no_shows_db.csv", index=False)
     print("💾 No Show Database saved to OUTPUT-DATA no_shows_db.csv")
-
 
 

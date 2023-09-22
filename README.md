@@ -1,49 +1,50 @@
 <img src="https://github.com/janduplessis883/project-showupforhealth/blob/master/images/Show%20Up%20for%20Health.png?raw=true" width=800>
 
-The United Kingdom's National Health Service (NHS) is a behemoth in the healthcare sector, providing primary, secondary, and tertiary care to millions of residents. With this vast reach and immense responsibility, efficient resource utilization is crucial. One aspect of resource allocation that has attracted attention over the years is missed appointments, colloquially known as "Did Not Attend" (DNA) events. These DNAs are reported to cost the NHS approximately £1 billion annually, a substantial figure that has the potential to be reduced with the right interventions.
+## Overview
 
-Situated in West London, Brompton Health Primary Care Network (PCN) is an amalgamation of 12 individual NHS GP Practices. Serving a considerable patient population of 140,000 individuals, this PCN experiences a DNA rate of 4% for face-to-face (F2F) appointments. Notably, while these figures pertain to F2F interactions, telephone appointments are typically not coded as missed, which might mean the true cost and extent of DNAs is potentially underrepresented.
+We aim to reduce the £1 billion annual cost of missed appointments (DNAs) in the UK's NHS by developing a predictive model focused on primary care. Based in West London's Brompton Health PCN, we're tackling a 4% DNA rate among 140,000 patients.
 
-Despite the significance of DNAs in primary care, much of the machine learning research in predicting missed appointments has focused on secondary care data. This presents an opportunity: can we harness the power of data science and machine learning to better predict, and thus mitigate, DNAs in a primary care setting like Brompton Health PCN?
+## The Problem
 
-This project aims to bridge this gap. Leveraging patient data, we intend to develop a predictive model to identify patients at risk of missing their appointments. By doing so, we hope to provide healthcare practitioners with a tool that allows for timely interventions, potentially reducing the number of DNAs and the associated costs.
+Despite its impact, the majority of predictive research on DNAs focuses on secondary care. Moreover, telephone appointments are often not counted, potentially underrepresenting the true scale of the issue.
 
-By hosting this project on GitHub, we invite collaboration, scrutiny, and iterative improvement. Together, we can work towards a more efficient NHS and better patient care.
+## Objective 🎯
 
-## Objective:
-To develop a predictive model utilizing deep learning techniques that can accurately forecast the likelihood of patients missing their primary care appointments. By considering unique features, including the Electronic Frailty Index, Obesity, Depression, Diabetes Mellitus, Index of Multiple Depravity 2023, distance from the surgery, the booking method of the consultation, length of registration with the practice, weather conditions (temperature and precipitation), and historical no-show data, this project aims to aid healthcare providers in making informed decisions and optimizing patient management.
+Utilize deep learning to predict the likelihood of primary care appointment DNAs. We'll be using features like health indicators and weather conditions to help healthcare providers optimize patient management.
+## Features 🔍
 
-## Features Overview:
-**Electronic Frailty Index**: Evaluating the vulnerability of a patient, often used in primary care to predict adverse outcomes.<BR>
-**Obesity**: Patient's obesity status, a common chronic condition with potential health complications.<BR>
-**Depression**: Mental health status, which can impact appointment adherence.<BR>
-**IMD 2023**: Index of Multiple Deprivation 2023 score, giving insight into the patient's socioeconomic status.<BR>
-**Distance from Surgery**: How far the patient resides from the healthcare center, impacting ease of access.<BR>
-**Distance from station**<br>
-**Booking Method**: Whether the appointment was clinician-booked or patient-booked, potentially influencing commitment levels.<BR>
-**Length of Registration with Practice**: How long the patient has been associated with the healthcare center, indicating familiarity and potential loyalty.<BR>
-**Weather Conditions**:<BR>
-- **Temperature**: To determine if extreme temperatures impact appointment attendance.<BR>
-- **Precipitation**: Analyzing the impact of rain or snow on appointment adherence.<BR>
-**Previous No-shows**: Historical data of missed appointments by the patient.<BR>
+- Electronic Frailty Index: Assesses patient vulnerability.
+- Obesity, Depression, Diabetes Mellitus, Hypertension, Diabetes Mellitus, Serious Mental Illness, Non-Diabetic Hyper Glycaemia
+- IMD 2023: Socioeconomic status score.
+- Distance from Surgery/Station: Accessibility factors.
+- Booking Method: Clinician-booked or patient-booked.
+- Length of Registration: Duration of patient's association with the healthcare center.
+- Weather Conditions: Temperature and precipitation.
+- Historical No-shows: Previous missed appointments.
 
-## Evaluation Metrics:
-**Recall**: Emphasizing the importance of correctly identifying actual no-shows, ensuring resources and proactive measures can be taken to possibly improve attendance.<BR>
-**Area Under the Curve (AUC)**: To evaluate the overall capability of the model to discriminate between those who will and will not miss their appointment.<BR>
+## Evaluation Metrics 📊
 
-## Implementation Plan:
-**Data Collection and Cleaning**: Ensure data quality and standardize all feature inputs.<BR>
-**Exploratory Data Analysis**: Understand the distribution and relationship between variables.<BR>
-**Feature Engineering and Selection**: Enhance model performance by creating or selecting the most impactful variables.<BR>
-**Model Development**: Implement a deep learning framework suitable for the dataset's nature and size.<BR>
-**Evaluation**: Use a test dataset to assess model performance based on recall and AUC.<BR>
-**Iterative Improvements**: Refine model based on feedback loops and performance on unseen data.<BR>
-**Deployment**: Integrate the model within healthcare systems for real-time or batch predictions.
+- Recall: To correctly identify actual no-shows.
+- AUC: To gauge model's discriminative power.
 
-## The Team:
-Jan du Plessis<BR>
-Micheal Melis<BR>
-Fabio Sparano<BR>
-Alessio Robotti<br>
+## Implementation Plan 🛠️
+
+- Data Collection and Cleaning
+- Exploratory Data Analysis
+- Feature Engineering and Selection
+- Model Development
+- Evaluation
+- Iterative Improvements
+- Deployment
+
+## The Team 👥
+
+- Jan du Plessis
+- Micheal Melis
+- Fabio Sparano
+- Alessio Robotti
+## Contribute 🤝
+
+We welcome collaboration and constructive criticism. Let's work together for a more efficient NHS and better patient care!
 
 

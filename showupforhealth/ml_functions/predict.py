@@ -364,12 +364,13 @@ def test_predict(df):
     else:
         print("❗️TEST PASSED - df has 37 columns!")
 
+
 def get_appointment_info(surgery_prefix):
-    df = pd.read_csv(f'{PREDICT_DATA}/{surgery_prefix}_predict.csv')
-    pt_id = df[['Appointment Date', 'Appointment time', 'Patient ID']]
+    df = pd.read_csv(f"{PREDICT_DATA}/{surgery_prefix}_predict.csv")
+    pt_id = df[["Appointment Date", "Appointment time", "Patient ID"]]
     return pt_id
-    
-    
+
+
 def make_predict():
     surgery_prefix = input("Enter Surgery Prefix: ")
     df = predict_add_weather(surgery_prefix=surgery_prefix)

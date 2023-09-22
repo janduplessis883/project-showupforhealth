@@ -294,24 +294,24 @@ def sample_df(df, n_samples):
 #     # Create a tpot object with a few generations and population size.
 #     tpot = TPOTClassifier(generations=5, population_size=50, verbosity=2, random_state=42)
 
-    # # Fit the tpot model on the training data
-    # tpot.fit(X_train, y_train)
+# # Fit the tpot model on the training data
+# tpot.fit(X_train, y_train)
 
-    # # Show the final model
-    # print(tpot.fitted_pipeline_)
+# # Show the final model
+# print(tpot.fitted_pipeline_)
 
-    # # Use the fitted model to make predictions on the test dataset
-    # test_predictions = tpot.predict(X_test)
+# # Use the fitted model to make predictions on the test dataset
+# test_predictions = tpot.predict(X_test)
 
-    # # Evaluate the model
-    # print(tpot.score(X_test, y_test))
+# # Evaluate the model
+# print(tpot.score(X_test, y_test))
 
-    # # Export the pipeline as a python script file
-    # time = datetime().now()
-    # root_dir = os.path.dirname(os.path.abspath(__file__))
-    # output_dir = f'pipelines/tpot_pipeline_{time}.csv'
-    # output_path = os.path.join(root_dir, output_dir)
-    # tpot.export(output_path)
+# # Export the pipeline as a python script file
+# time = datetime().now()
+# root_dir = os.path.dirname(os.path.abspath(__file__))
+# output_dir = f'pipelines/tpot_pipeline_{time}.csv'
+# output_path = os.path.join(root_dir, output_dir)
+# tpot.export(output_path)
 
 
 def train_val_test_split(X, y, val_size=0.2, test_size=0.2, random_state=42):

@@ -33,6 +33,15 @@ def home_page():
     # Create a file uploader widget
     uploaded_file = st.file_uploader("Upload a file", type=["csv", "txt", "xlsx", "json"])
 
+# Drop down menu for clinics
+    surgery_prefix = st.selectbox(
+        "Which clinic would you like to select?",
+        ("ECS", "HPVM", "KMC", "SMW", "TCP", "TGP"),
+    )
+
+    # Print selected clinic
+    st.write("You selected:", surgery_prefix)
+
     # Check if a file has been uploaded
     if uploaded_file is not None:
         st.success("File uploaded successfully!")
@@ -50,14 +59,7 @@ def home_page():
             st.write(df.head())  # Display the first few rows of the DataFrame
 
 
-            # Drop down menu for clinics
-            surgery_prefix = st.selectbox(
-                "Which clinic would you like to select?",
-                ("ECS", "HPVM", "KMC", "SMW", "TCP", "TGP"),
-            )
 
-            # Print selected clinic
-            st.write("You selected:", surgery_prefix)
 
             # Take uploaded_file, surgery_prefix, and df
             # Perform your model operations here and display the results
@@ -78,10 +80,10 @@ def home_page():
         # Use model to predict (you can add your model code here)
         # For example, assuming you have a function run_your_model()
         # prediction = run_your_model(df, surgery_prefix)
-        prediction = None  # Replace None with your actual prediction result
+        prediction = final_predict("HPVM")  # Replace None with your actual prediction result
 
         # Display prediction
-        st.write(f"Prediction: {prediction}")
+        st.dataframe(prediction)
 
 
 

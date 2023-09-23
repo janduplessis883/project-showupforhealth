@@ -503,5 +503,3 @@ def make_no_show_db():
     unique_ids = noshows.drop_duplicates(keep="first")
     unique_ids.to_csv(f"{OUTPUT_DATA}/no_shows_db.csv", index=False)
     print("💾 No Show Database saved to OUTPUT-DATA no_shows_db.csv")
-
-

@@ -69,12 +69,12 @@ def sort_df_columns(df):
 
 
 def scaler_model_predict(df):
-    print(Fore.GREEN + "\n▶️ Select Scaler + Model:")
-    print(Fore.GREEN + "1. jan_scaler_17sept23 + model16sept23_jan")
-    print(Fore.GREEN + "2. Jan Backup 22 Sept 9am")
-    print(Fore.GREEN + "3. Gentle Water undersample 0.15")
-    #scaler_no = input(Fore.RED + "Enter Selection: ")
-    print(Style.RESET_ALL)
+    # print(Fore.GREEN + "\n▶️ Select Scaler + Model:")
+    # print(Fore.GREEN + "1. jan_scaler_17sept23 + model16sept23_jan")
+    # print(Fore.GREEN + "2. Jan Backup 22 Sept 9am")
+    # print(Fore.GREEN + "3. Gentle Water undersample 0.15")
+    # #scaler_no = input(Fore.RED + "Enter Selection: ")
+    # print(Style.RESET_ALL)
     scaler_no = '1'
     if scaler_no == "1":
         scaler = load(f"{MODEL_OUTPUT}/jan_scaler_17sept23.pkl")

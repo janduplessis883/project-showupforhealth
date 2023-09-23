@@ -17,12 +17,7 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import OneHotEncoder
 
 
-
-
-
-
-
-# Home page fucntion
+# Home page function
 def home_page():
 
     # Get the current working directory
@@ -35,7 +30,10 @@ def home_page():
     # Display home page image
     st.image(image_path, use_column_width=True)
 
-    # Drop down menu for clinics
+    # Create a file uploader widget
+    uploaded_file = st.file_uploader("Upload a file", type=["csv", "txt", "xlsx", "json"])
+
+# Drop down menu for clinics
     surgery_prefix = st.selectbox(
         "Which clinic would you like to select?",
         ("ECS", "HPVM", "KMC", "SMW", "TCP", "TGP"),
@@ -44,13 +42,50 @@ def home_page():
     # Print selected clinic
     st.write("You selected:", surgery_prefix)
 
+    # Check if a file has been uploaded
+    if uploaded_file is not None:
+        st.success("File uploaded successfully!")
+
+        # You can perform operations on the uploaded file here
+        # For example, you can read and display the content of the file:
+        # file_contents = uploaded_file.read()
+        # st.write("File Contents:")
+        # st.write(file_contents.decode())
+
+        # Parse the CSV file into a pandas DataFrame
+        try:
+            df = pd.read_csv(uploaded_file)  # Assuming it's a CSV file
+            # st.write("Data Preview:")
+            st.write(df.head())  # Display the first few rows of the DataFrame
+
+
+
+
+            # Take uploaded_file, surgery_prefix, and df
+            # Perform your model operations here and display the results
+            # For example:
+            # result = run_your_model(df, surgery_prefix)
+            # st.write("Model Results:")
+            # st.write(result)
+
+        except Exception as e:
+            st.error("Error reading the uploaded file. Please make sure it's in the correct format.")
+            st.exception(e)
+
+    else:
+        st.info("Please upload a file")
+
     # Create a button, when clicked, run prediction
     if st.button("Predict"):
-        # Use model to predict
-        prediction = st.dataframe(df)
+        # Use model to predict (you can add your model code here)
+        # For example, assuming you have a function run_your_model()
+        # prediction = run_your_model(df, surgery_prefix)
+        prediction = final_predict("HPVM")  # Replace None with your actual prediction result
 
         # Display prediction
-        st.write(f"Prediction: {prediction}")
+        st.dataframe(prediction)
+
+
 
 # About page function
 def about_page():
@@ -312,15 +347,6 @@ if __name__ == '__main__':
 
 
 
-# Load the trained model (replace with your model file)
-# model = model_name()
-# model.load('our_model.pkl')
-
-# # Create input fields for user to input data
-# feature1 = st.number_input('Input feature 1')
-# feature2 = st.number_input('Input feature 2')
-# feature3 = st.number_input('Input feature 3')
-
 
 # Button to download the dataframe as a csv file
 # @st.cache
@@ -336,13 +362,3 @@ if __name__ == '__main__':
 #     file_name='large_df.csv',
 #     mime='text/csv',
 # )
-
-
-# Creating a function for the prediction of patients showing up or not to thier appointments
-
-# def show_up(uploaded_file):
-
-#     if prediction == 1:
-#         st.write("The patient will show up to their appointment")
-#     else:
-#         st.write("The patient will not show up to their appointment")

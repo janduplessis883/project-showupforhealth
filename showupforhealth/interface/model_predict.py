@@ -149,6 +149,7 @@ def display_outcome_df(class_labels, pt_id_df):
     return unique_no_snows
 
 
+
 if __name__ == "__main__":
     print(Fore.BLUE + "\nECS - Earls Court Surgery")
     print(Fore.BLUE + "TGP - The Good Practice")

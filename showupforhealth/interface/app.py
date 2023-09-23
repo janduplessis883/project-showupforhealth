@@ -16,6 +16,7 @@ from showupforhealth.interface.model_predict import *
 from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import OneHotEncoder
 
+st.set_page_config(layout="wide")
 
 # Home page function
 def home_page():

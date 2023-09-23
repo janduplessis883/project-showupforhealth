@@ -69,12 +69,12 @@ def sort_df_columns(df):
 
 
 def scaler_model_predict(df):
-    print(Fore.GREEN + "\n▶️ Select Scaler + Model:")
-    print(Fore.GREEN + "1. jan_scaler_17sept23 + model16sept23_jan")
-    print(Fore.GREEN + "2. Jan Backup 22 Sept 9am")
-    print(Fore.GREEN + "3. Gentle Water undersample 0.15")
-    #scaler_no = input(Fore.RED + "Enter Selection: ")
-    print(Style.RESET_ALL)
+    # print(Fore.GREEN + "\n▶️ Select Scaler + Model:")
+    # print(Fore.GREEN + "1. jan_scaler_17sept23 + model16sept23_jan")
+    # print(Fore.GREEN + "2. Jan Backup 22 Sept 9am")
+    # print(Fore.GREEN + "3. Gentle Water undersample 0.15")
+    # #scaler_no = input(Fore.RED + "Enter Selection: ")
+    # print(Style.RESET_ALL)
     scaler_no = '1'
     if scaler_no == "1":
         scaler = load(f"{MODEL_OUTPUT}/jan_scaler_17sept23.pkl")
@@ -125,12 +125,13 @@ def scaler_model_predict(df):
 def display_threshold_info(predictions, thresholds=[0.4, 0.5, 0.6, 0.7, 0.8]):
     for t in thresholds:
         class_labels = (predictions > t).astype(int)
-        print(
-            f"No shows Predicted at {t} threshold: {class_labels.flatten().tolist().count(0)}"
-        )
+        # print(
+        #     f"No shows Predicted at {t} threshold: {class_labels.flatten().tolist().count(0)}"
+        # )
 
-    select_threshold = input(Fore.RED + "Select Threshold to continue: ")
-    print(Style.RESET_ALL)
+    #select_threshold = input(Fore.RED + "Select Threshold to continue: ")
+    select_threshold = 0.6
+    #print(Style.RESET_ALL)
     class_labels = (predictions > float(select_threshold)).astype(int)
 
     return class_labels
@@ -144,8 +145,8 @@ def display_outcome_df(class_labels, pt_id_df):
     no_shows = df[df["Model_Prediction"] == 0]
     count_dup = no_shows.duplicated().sum()
     unique_no_snows = no_shows.drop_duplicates(subset="Patient ID")
-    print("-- Unique Predicted No Shows --------------------------")
-    print(f"Duplicates Dropped: {count_dup}")
+    # print("-- Unique Predicted No Shows --------------------------")
+    # print(f"Duplicates Dropped: {count_dup}")
     return unique_no_snows
 
 
@@ -154,7 +155,9 @@ def final_predict(surgery_prefix):
     X_new = X_temp.drop(columns="Patient ID")
     pt_id = X_temp[["Patient ID"]]
     predictions = scaler_model_predict(X_new)
-    return predictions
+    class_labels = display_threshold_info(predictions)
+    df = display_outcome_df(class_labels, pt_id)
+    return df
     
     
 

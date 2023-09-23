@@ -59,6 +59,12 @@ def about_page():
     st.subheader('Purpose:')
     st.write("The purpose of this project is to reduce the £1 billion annual cost of missed appointments (DNAs) in the UK's NHS by developing a predictive model focused on primary care. Based in West London's Brompton Health PCN, we're tackling a 4% DNA rate among 140,000 patients.")
 
+    st.subheader('Problem:')
+    st.write("Despite its impact, the majority of predictive research on DNAs focuses on secondary care. Moreover, telephone appointments are often not counted, potentially underrepresenting the true scale of the issue.")
+
+    st.subheader('Our Product:')
+    st.write("Utilize deep learning to predict the likelihood of primary care appointment DNAs. We'll be using features like health indicators and weather conditions to help healthcare providers optimize patient management.")
+
     st.subheader('The Team:')
 
     # Create columns for images and names side by side

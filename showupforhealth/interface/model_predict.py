@@ -170,12 +170,17 @@ if __name__ == "__main__":
     class_labels = display_threshold_info(predictions)
     df = display_outcome_df(class_labels, pt_id)
     print(f"df shape: {df.shape}")
-    display(df)
+    
 
     surgery = pd.read_csv(f"{PREDICT_DATA}/original/{surgery_prefix}_Predict.csv")
     surgery_dna = surgery[surgery["Appointment status"] == "Did Not Attend"]
     new = surgery_dna.merge(df, on="Patient ID", how="left")
-
+    print()
+    print(Fore.RED +f'Unique No Shows: {df.shape[0]}')
+    print(Fore.RED +f"Correct Predictions: {new['Model_Prediction'].value_counts()[0]}")
+    print(Fore.RED +f"Percentage: {new['Model_Prediction'].value_counts()[0] / df.shape[0]}")
+    
+    display(df)
     # Function to apply the styling
     def highlight_duplicates(s):
         is_duplicated = s.duplicated(keep=False)  # mark all duplicates as True
@@ -184,3 +189,5 @@ if __name__ == "__main__":
     # Apply the styling
     styled_df = new.style.apply(highlight_duplicates, subset=["Patient ID"])
     display(styled_df)
+
+

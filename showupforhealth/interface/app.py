@@ -16,10 +16,23 @@ from showupforhealth.interface.model_predict import *
 from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import OneHotEncoder
 
+
+
+
+
+
+
 # Home page fucntion
 def home_page():
-    image_path = "/Users/fabiosparano/code/janduplessis883/project-showupforhealth/images/Show Up for Health.png"
 
+    # Get the current working directory
+    current_directory = os.getcwd()
+
+    # Define the path to Jan's image
+    relative_image_path = "images/Show_Up_for_Health.png"
+    image_path = os.path.join(current_directory, relative_image_path)
+
+    # Display home page image
     st.image(image_path, use_column_width=True)
 
     # Drop down menu for clinics
@@ -39,20 +52,27 @@ def home_page():
         # Display prediction
         st.write(f"Prediction: {prediction}")
 
-
-
-
+# About page function
 def about_page():
-    import streamlit as st
+
+    # Get the current working directory
+    current_directory = os.getcwd()
 
     # Define the path to Jan's image
-    image_path_jan = "/Users/fabiosparano/code/janduplessis883/project-showupforhealth/images/jancrop_bw.png"
+    relative_image_path_jan = "images/jancrop_bw.png"
+    image_path_jan = os.path.join(current_directory, relative_image_path_jan)
+
     # Define the path to Michael's image
-    image_path_michael = "/Users/fabiosparano/code/janduplessis883/project-showupforhealth/images/michaelcrop_bw.png"
+    relative_image_path_michael = "images/michaelcrop_bw.png"
+    image_path_michael = os.path.join(current_directory, relative_image_path_michael)
+
     # Define the path to Alessio's image
-    image_path_alessio = "/Users/fabiosparano/code/janduplessis883/project-showupforhealth/images/Alex_BW.png"
+    relative_image_path_alessio = "images/Alex_BW.png"
+    image_path_alessio = os.path.join(current_directory, relative_image_path_alessio)
+
     # Define the path to Fabio's image
-    image_path_fabio = "/Users/fabiosparano/code/janduplessis883/project-showupforhealth/images/Fabiocrop_bw.png"
+    relative_image_path_fabio = "images/Fabiocrop_bw.png"
+    image_path_fabio = os.path.join(current_directory, relative_image_path_fabio)
 
     st.header('About the Project')
 
@@ -90,53 +110,7 @@ def about_page():
         st.image(image_path_fabio, width=150)
         st.write('Fabio Sparano')
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    # st.header('About the Project')
-
-    # st.subheader('Purpose:')
-    # st.write("The purpose of this project is to We aim to reduce the £1 billion annual cost of missed appointments (DNAs) in the UK's NHS by developing a predictive model focused on primary care. Based in West London's Brompton Health PCN, we're tackling a 4% DNA rate among 140,000 patients.")
-
-    # st.subheader('The Team:')
-    # st.write('Jan du Plessis')
-    # # Define the path to Jan image
-    # image_path = "/Users/fabiosparano/code/janduplessis883/project-showupforhealth/images/jancrop.png"
-
-    # st.image(image_path, width=150)
-
-    # st.write('Michael Melis')
-    # # Define the path to Jan image
-    # image_path = "/Users/fabiosparano/code/janduplessis883/project-showupforhealth/images/jancrop.png"
-
-    # st.image(image_path, width=150)
-
-    # st.write('Alessio Robotti')
-    # # Define the path to Jan image
-    # image_path = "/Users/fabiosparano/code/janduplessis883/project-showupforhealth/images/jancrop.png"
-
-    # st.image(image_path, width=150)
-
-    # st.write('Fabio Sparano')
-    # # Define the path to Jan image
-    # image_path = "/Users/fabiosparano/code/janduplessis883/project-showupforhealth/images/jancrop.png"
-
-    # st.image(image_path, width=150)
-
-
-
-
-
+# Main function
 def main():
     # st.title('Show up for Health')
     # Create a sidebar menu

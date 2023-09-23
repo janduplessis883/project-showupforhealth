@@ -73,9 +73,9 @@ def scaler_model_predict(df):
     print(Fore.GREEN + "1. jan_scaler_17sept23 + model16sept23_jan")
     print(Fore.GREEN + "2. Jan Backup 22 Sept 9am")
     print(Fore.GREEN + "3. Gentle Water undersample 0.15")
-    scaler_no = input(Fore.RED + "Enter Selection: ")
+    #scaler_no = input(Fore.RED + "Enter Selection: ")
     print(Style.RESET_ALL)
-
+    scaler_no = '1'
     if scaler_no == "1":
         scaler = load(f"{MODEL_OUTPUT}/jan_scaler_17sept23.pkl")
         model = load_model(
@@ -149,6 +149,15 @@ def display_outcome_df(class_labels, pt_id_df):
     return unique_no_snows
 
 
+def final_predict(surgery_prefix):
+    X_temp = streamlit_predict(surgery_prefix)
+    X_new = X_temp.drop(columns="Patient ID")
+    pt_id = X_temp[["Patient ID"]]
+    predictions = scaler_model_predict(X_new)
+    return predictions
+    
+    
+
 if __name__ == "__main__":
     print(Fore.BLUE + "\nECS - Earls Court Surgery")
     print(Fore.BLUE + "TGP - The Good Practice")
@@ -162,6 +171,8 @@ if __name__ == "__main__":
     X_temp = streamlit_predict(surgery_prefix)
     X_new = X_temp.drop(columns="Patient ID")
     pt_id = X_temp[["Patient ID"]]
+    class_labels = display_threshold_info(predictions)
+    df = display_outcome_df(class_labels, pt_id)
 
     X_new.shape
 

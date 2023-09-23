@@ -157,7 +157,11 @@ def final_predict(surgery_prefix):
     predictions = scaler_model_predict(X_new)
     class_labels = display_threshold_info(predictions)
     df = display_outcome_df(class_labels, pt_id)
-    return df
+    
+    surgery = pd.read_csv(f"{PREDICT_DATA}/original/HPVM_Predict.csv")
+    surgery_dna = surgery[surgery["Appointment status"] == "Did Not Attend"]
+    new = surgery_dna.merge(df, on="Patient ID", how="left")
+    return new
     
     
 

@@ -38,10 +38,10 @@ For more information, please feel free to contact us at drjanduplessis@icloud.co
 
 ## The Team 👥
 
-- Jan du Plessis
-- Micheal Melis
-- Fabio Sparano
-- Alessio Robotti
+- [Jan du Plessis](https://www.linkedin.com/in/jan-du-plessis-b72806244?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3BKL4sIxaYRwyklMNNQ2cG8w%3D%3D)
+- [Micheal Melis](https://www.linkedin.com/in/michael-melis-cfa-28154b127?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3BZu0IKuZFR%2BS4MRRasMqR5A%3D%3D)
+- [Fabio Sparano](https://www.linkedin.com/in/fabiosparano?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3BXixlqOj%2FSfGasys%2FZa%2B1Eg%3D%3D)
+- [Alessio Robotti](https://www.linkedin.com/in/alex-robotti-794160255?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3Bfbvq4OUwTvKx3eWpEsddrw%3D%3D)
 
 ## Contribute 🤝
 

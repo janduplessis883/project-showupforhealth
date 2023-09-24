@@ -34,7 +34,7 @@ Our app harnesses the power of deep learning to predict the likelihood of DNAs i
 
 We invite you to be part of this revolutionary journey. Whether you're a healthcare provider in the Brompton Health PCN, or a curious individual interested in the future of healthcare, we want to hear from you.
 
-For more information, please feel free to contact us at drjanduplessis@icloud.com
+For more information, please feel free to contact us at jan.duplessis@nhs.net
 
 ## The Team 👥
 

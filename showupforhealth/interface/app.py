@@ -16,7 +16,11 @@ from showupforhealth.interface.model_predict import *
 from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import OneHotEncoder
 
-st.set_page_config(layout="wide")
+st.set_page_config(
+    page_title="Show Up for Health",
+    page_icon="🩺"
+)
+
 
 # Home page function
 def home_page():
@@ -120,16 +124,16 @@ def about_page():
 
     st.header('About the Project')
 
-    st.subheader('Purpose:')
-    st.write("The purpose of this project is to reduce the £1 billion annual cost of missed appointments (DNAs) in the UK's NHS by developing a predictive model focused on primary care. Based in West London's Brompton Health PCN, we're tackling a 4% DNA rate among 140,000 patients.")
+    st.subheader('Our Inspiration:')
+    st.write("The NHS faces an annual cost of approximately £1 billion due to missed appointments, commonly known as DNAs (Did Not Attends). These DNAs not only drain resources but also extend wait times for other patients who could have used those slots. With a staggering 4% DNA rate among 140,000 patients in our primary care network alone, we decided it was time for a change.")
 
 
 
-    st.subheader('Problem:')
-    st.write("Despite its impact, the majority of predictive research on DNAs focuses on secondary care. Moreover, telephone appointments are often not counted, potentially underrepresenting the true scale of the issue.")
+    st.subheader("The Problem We're Solving :")
+    st.write("While the issue of DNAs has gained some attention, most existing predictive models are focused on secondary care. This leaves primary care, the frontline of healthcare, underrepresented in data-driven solutions. Moreover, telephone appointments are often not counted, concealing the true scale of the issue.")
 
-    st.subheader('Our Product:')
-    st.write("Utilize deep learning to predict the likelihood of primary care appointment DNAs. We'll be using features like health indicators and weather conditions to help healthcare providers optimize patient management.")
+    st.subheader('Our App:')
+    st.write("Our app harnesses the power of deep learning to predict the likelihood of DNAs in primary care appointments. We're not just looking at past attendance records; we're also integrating variables like health indicators, local weather conditions, index of multiple deprivation and more, to give healthcare providers a more holistic understanding of patient behaviour.")
 
     st.write("")
     st.write("")

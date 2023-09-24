@@ -30,8 +30,14 @@ def home_page():
     # Display home page image
     st.image(image_path, use_column_width=True)
 
+    st.write("")
+    st.write("")
+
     # Create a file uploader widget
     uploaded_file = st.file_uploader("Upload a file", type=["csv", "txt", "xlsx", "json"])
+
+    st.write("")
+    st.write("")
 
 # Drop down menu for clinics
     surgery_prefix = st.selectbox(
@@ -73,7 +79,9 @@ def home_page():
             st.exception(e)
 
     else:
-        st.info("Please upload a file")
+        st.write("")
+
+    st.write("")
 
     # Create a button, when clicked, run prediction
     if st.button("Predict"):
@@ -114,11 +122,16 @@ def about_page():
     st.subheader('Purpose:')
     st.write("The purpose of this project is to reduce the £1 billion annual cost of missed appointments (DNAs) in the UK's NHS by developing a predictive model focused on primary care. Based in West London's Brompton Health PCN, we're tackling a 4% DNA rate among 140,000 patients.")
 
+
+
     st.subheader('Problem:')
     st.write("Despite its impact, the majority of predictive research on DNAs focuses on secondary care. Moreover, telephone appointments are often not counted, potentially underrepresenting the true scale of the issue.")
 
     st.subheader('Our Product:')
     st.write("Utilize deep learning to predict the likelihood of primary care appointment DNAs. We'll be using features like health indicators and weather conditions to help healthcare providers optimize patient management.")
+
+    st.write("")
+    st.write("")
 
     st.subheader('The Team:')
 

@@ -150,6 +150,9 @@ def display_outcome_df(class_labels, pt_id_df):
     return unique_no_snows
 
 
+
+
+
 def final_predict(surgery_prefix):
     X_temp = streamlit_predict(surgery_prefix)
     X_new = X_temp.drop(columns="Patient ID")
@@ -161,8 +164,13 @@ def final_predict(surgery_prefix):
     surgery = pd.read_csv(f"{PREDICT_DATA}/original/HPVM_Predict.csv")
     surgery_dna = surgery[surgery["Appointment status"] == "Did Not Attend"]
     new = surgery_dna.merge(df, on="Patient ID", how="left")
-    new['Model_Prediction'] = new['Model_Prediction'].replace(0.0, "❌")
+    new['Model_Prediction'] = new['Model_Prediction'].replace(0.0, '❌')
     return new
+    
+    
+    
+    
+    
     
     
 

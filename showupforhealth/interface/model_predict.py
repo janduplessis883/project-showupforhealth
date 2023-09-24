@@ -187,6 +187,7 @@ if __name__ == "__main__":
     X_temp = streamlit_predict(surgery_prefix)
     X_new = X_temp.drop(columns="Patient ID")
     pt_id = X_temp[["Patient ID"]]
+    predictions = scaler_model_predict(X_new)
     class_labels = display_threshold_info(predictions)
     df = display_outcome_df(class_labels, pt_id)
 

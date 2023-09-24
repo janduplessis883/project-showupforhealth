@@ -59,3 +59,4 @@ jupyterlab-widgets==1.1.1
 jupyterlab_server==2.16.1
 streamlit 
 torch
+ipywidgets

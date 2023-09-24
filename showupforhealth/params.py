@@ -56,3 +56,11 @@ PREDICT_DATA = os.path.join(
     "data",
     "predict",
 )
+
+UPLOAD_FOLDER = os.path.join(
+    os.path.expanduser("~"),
+    "code",
+    "janduplessis883",
+    "data-showup",
+    "uploads",
+)

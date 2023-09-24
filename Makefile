@@ -32,6 +32,9 @@ model_predict:
 model_train:
 	python showupforhealth/interface/model_train.py
 
+real_predict:
+	python showupforhealth/interface/main.py
+
 test:
 	@pytest -v tests
 

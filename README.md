@@ -43,9 +43,6 @@ For more information, please feel free to contact us at jan.duplessis@nhs.net
 - [Fabio Sparano](https://www.linkedin.com/in/fabiosparano?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3BXixlqOj%2FSfGasys%2FZa%2B1Eg%3D%3D)
 - [Alessio Robotti](https://www.linkedin.com/in/alex-robotti-794160255?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3Bfbvq4OUwTvKx3eWpEsddrw%3D%3D)
 
-## Contribute 🤝
 
-
-We welcome collaboration and constructive criticism. Let's work together for a more efficient NHS and better patient care!
 
 

@@ -16,15 +16,11 @@ from showupforhealth.interface.model_predict import *
 from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import OneHotEncoder
 
-st.set_page_config(
-    page_title="Show Up for Health",
-    page_icon="🩺"
-)
+st.set_page_config(page_title="Show Up for Health", page_icon="🩺")
 
 
 # Home page function
 def home_page():
-
     # Get the current working directory
     current_directory = os.getcwd()
 
@@ -39,12 +35,14 @@ def home_page():
     st.write("")
 
     # Create a file uploader widget
-    uploaded_file = st.file_uploader("Upload a file", type=["csv", "txt", "xlsx", "json"])
+    uploaded_file = st.file_uploader(
+        "Upload a file", type=["csv", "txt", "xlsx", "json"]
+    )
 
     st.write("")
     st.write("")
 
-# Drop down menu for clinics
+    # Drop down menu for clinics
     surgery_prefix = st.selectbox(
         "Which clinic would you like to select?",
         ("ECS", "HPVM", "KMC", "SMW", "TCP", "TGP"),
@@ -69,9 +67,6 @@ def home_page():
             # st.write("Data Preview:")
             st.write(df.head())  # Display the first few rows of the DataFrame
 
-
-
-
             # Take uploaded_file, surgery_prefix, and df
             # Perform your model operations here and display the results
             # For example:
@@ -80,7 +75,9 @@ def home_page():
             # st.write(result)
 
         except Exception as e:
-            st.error("Error reading the uploaded file. Please make sure it's in the correct format.")
+            st.error(
+                "Error reading the uploaded file. Please make sure it's in the correct format."
+            )
             st.exception(e)
 
     else:
@@ -93,16 +90,18 @@ def home_page():
         # Use model to predict (you can add your model code here)
         # For example, assuming you have a function run_your_model()
         # prediction = run_your_model(df, surgery_prefix)
-        prediction = final_predict("HPVM")  # Replace None with your actual prediction result
-
+        prediction = final_predict(
+            "HPVM"
+        )  # Replace None with your actual prediction result
+        public_predict = prediction[
+            ["Model_Prediction", "Appointment date", "Appointment time", "Clinician"]
+        ]
         # Display prediction
-        st.dataframe(prediction)
-
+        st.dataframe(public_predict)
 
 
 # About page function
 def about_page():
-
     # Get the current working directory
     current_directory = os.getcwd()
 
@@ -122,23 +121,27 @@ def about_page():
     relative_image_path_fabio = "images/Fabiocrop_bw.png"
     image_path_fabio = os.path.join(current_directory, relative_image_path_fabio)
 
-    st.header('About the Project')
+    st.header("About the Project")
 
-    st.subheader('Our Inspiration:')
-    st.write("The NHS faces an annual cost of approximately £1 billion due to missed appointments, commonly known as DNAs (Did Not Attends). These DNAs not only drain resources but also extend wait times for other patients who could have used those slots. With a staggering 4% DNA rate among 140,000 patients in our primary care network alone, we decided it was time for a change.")
-
-
+    st.subheader("Our Inspiration:")
+    st.write(
+        "The NHS faces an annual cost of approximately £1 billion due to missed appointments, commonly known as DNAs (Did Not Attends). These DNAs not only drain resources but also extend wait times for other patients who could have used those slots. With a staggering 4% DNA rate among 140,000 patients in our primary care network alone, we decided it was time for a change."
+    )
 
     st.subheader("The Problem We're Solving :")
-    st.write("While the issue of DNAs has gained some attention, most existing predictive models are focused on secondary care. This leaves primary care, the frontline of healthcare, underrepresented in data-driven solutions. Moreover, telephone appointments are often not counted, concealing the true scale of the issue.")
+    st.write(
+        "While the issue of DNAs has gained some attention, most existing predictive models are focused on secondary care. This leaves primary care, the frontline of healthcare, underrepresented in data-driven solutions. Moreover, telephone appointments are often not counted, concealing the true scale of the issue."
+    )
 
-    st.subheader('Our App:')
-    st.write("Our app harnesses the power of deep learning to predict the likelihood of DNAs in primary care appointments. We're not just looking at past attendance records; we're also integrating variables like health indicators, local weather conditions, index of multiple deprivation and more, to give healthcare providers a more holistic understanding of patient behaviour.")
+    st.subheader("Our App:")
+    st.write(
+        "Our app harnesses the power of deep learning to predict the likelihood of DNAs in primary care appointments. We're not just looking at past attendance records; we're also integrating variables like health indicators, local weather conditions, index of multiple deprivation and more, to give healthcare providers a more holistic understanding of patient behaviour."
+    )
 
     st.write("")
     st.write("")
 
-    st.subheader('The Team:')
+    st.subheader("The Team:")
 
     # Create columns for images and names side by side
     col1, col2, col3, col4 = st.columns(4)
@@ -146,77 +149,77 @@ def about_page():
     # Display Jan's image and name
     with col1:
         st.image(image_path_jan, width=150)
-        st.write('Jan du Plessis')
+        st.write("Jan du Plessis")
 
     # Display Michael's image and name
     with col2:
         st.image(image_path_michael, width=150)
-        st.write('Michael Melis')
+        st.write("Michael Melis")
 
     # Display Alessio's image and name
     with col3:
         st.image(image_path_alessio, width=150)
-        st.write('Alessio Robotti')
+        st.write("Alessio Robotti")
 
     # Display Fabio's image and name
     with col4:
         st.image(image_path_fabio, width=150)
-        st.write('Fabio Sparano')
+        st.write("Fabio Sparano")
+
 
 # Main function
 def main():
     # st.title('Show up for Health')
     # Create a sidebar menu
-    st.sidebar.title('Navigation')
-    page = st.sidebar.selectbox('Select a page', ['Home', 'About'])
+    st.sidebar.title("Navigation")
+    page = st.sidebar.selectbox("Select a page", ["Home", "About"])
     # Depending on the selected page, display content
-    if page == 'Home':
+    if page == "Home":
         home_page()
-    elif page == 'About':
+    elif page == "About":
         about_page()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
-
-
 
 
 # df = pd.read_csv(f"{PREDICT_DATA}/original/{surgery_prefix}_Predict.csv")
 # df = pd.DataFrame(
-    # data={
-        # "Appointment status": {
-            # 8: "Finished",
-            # 214: "Finished",
-            # 225: "Finished",
-            # 422: "Finished",
-            # 423: "Did Not Attend",
-            # 425: "Did Not Attend",
-            # 474: "Did Not Attend",
-            # 475: "Did Not Attend",
-            # 476: "Did Not Attend",
-            # 477: "Did Not Attend",
-            # 590: "Finished",
-            # 618: "Did Not Attend",
-            # 1098: "Finished",
-            # 1165: "Finished",
-            # 1310: "Finished",
-            # 1626: "Finished",
-            # 1627: "Finished",
-            # 1628: "Finished",
-            # 1825: "Did Not Attend",
-            # 1826: "Did Not Attend",
-            # 1855: "Finished",
-            # 1856: "Finished",
-            # 1857: "Finished",
-            # 2090: "Finished",
-            # 2178: "Finished",
-            # 2179: "Finished",
-            # 2213: "Finished",
-            # 2214: "Finished",
-            # 2325: "Finished",
-            # 2335: "Finished",
-            # 2336: "Finished",
-            # 2404: "Finished",
+# data={
+# "Appointment status": {
+# 8: "Finished",
+# 214: "Finished",
+# 225: "Finished",
+# 422: "Finished",
+# 423: "Did Not Attend",
+# 425: "Did Not Attend",
+# 474: "Did Not Attend",
+# 475: "Did Not Attend",
+# 476: "Did Not Attend",
+# 477: "Did Not Attend",
+# 590: "Finished",
+# 618: "Did Not Attend",
+# 1098: "Finished",
+# 1165: "Finished",
+# 1310: "Finished",
+# 1626: "Finished",
+# 1627: "Finished",
+# 1628: "Finished",
+# 1825: "Did Not Attend",
+# 1826: "Did Not Attend",
+# 1855: "Finished",
+# 1856: "Finished",
+# 1857: "Finished",
+# 2090: "Finished",
+# 2178: "Finished",
+# 2179: "Finished",
+# 2213: "Finished",
+# 2214: "Finished",
+# 2325: "Finished",
+# 2335: "Finished",
+# 2336: "Finished",
+# 2404: "Finished",
 #             2405: "Finished",
 #             2931: "Finished",
 #             2932: "Finished",
@@ -362,8 +365,6 @@ if __name__ == '__main__':
 #         },
 #     }
 # )
-
-
 
 
 # Button to download the dataframe as a csv file

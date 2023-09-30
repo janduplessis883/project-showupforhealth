@@ -8,6 +8,7 @@ clean:
 	@rm -Rf build
 	@rm -Rf */__pycache__
 	@rm -Rf */*.pyc
+	@rm -Rf ../data-showup/uploads/*/.DS_Store
 	@echo "🧽 Cleaned up successfully!"
 
 all: install clean
@@ -36,7 +37,7 @@ real_predict:
 	python showupforhealth/interface/main.py
 
 test:
-	@pytest -v tests
+	@pytest
 
 # Specify package name
 lint:

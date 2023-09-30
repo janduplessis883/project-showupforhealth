@@ -10,10 +10,8 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import OneHotEncoder
 
 
-
 def predict_add_weather(surgery_prefix):
-
-    data = pd.read_csv(f"{PREDICT_DATA}/{surgery_prefix}_predict.csv")
+    data = pd.read_csv(f"{UPLOAD_FOLDER}/{surgery_prefix}_predict40.csv")
 
     data["weather_time"] = data["Appointment time"].str.split("-").str[0]
     data["weather_datetime"] = data["Appointment date"] + " " + data["weather_time"]
@@ -67,15 +65,13 @@ def predict_add_weather(surgery_prefix):
     if nanindf.sum() > 0:
         print(f"❌ NaN values in df - ERROR: {nanindf}")
     else:
-
         df["Patient ID"] = df["Patient ID"].astype("int")
         return df
 
 
 def predict_add_weather_from_df(df):
-
     df["weather_time"] = df["Appointment time"].str.split("-").str[0]
-    df['Appointment date'] = df['Appointment date'].astype('str')
+    df["Appointment date"] = df["Appointment date"].astype("str")
     df["weather_datetime"] = df["Appointment date"] + " " + df["weather_time"]
     df["Appointment date"] = pd.to_datetime(df["Appointment date"])
     df["weather_datetime"] = pd.to_datetime(df["weather_datetime"])
@@ -127,13 +123,128 @@ def predict_add_weather_from_df(df):
     if nanindf.sum() > 0:
         print(f"❌ NaN values in df - ERROR: {nanindf}")
     else:
+        df["Patient ID"] = df["Patient ID"].astype("int")
+        return df
 
+
+def predict_add_weather_file(df):
+    data = df
+
+    data["weather_time"] = data["Appointment time"].str.split("-").str[0]
+    data["weather_datetime"] = data["Appointment date"] + " " + data["weather_time"]
+    data["Appointment date"] = pd.to_datetime(data["Appointment date"])
+    data["weather_datetime"] = pd.to_datetime(data["weather_datetime"])
+    start_date = data["Appointment date"].dt.strftime("%Y-%m-%d").min()
+    end_date = data["Appointment date"].dt.strftime("%Y-%m-%d").max()
+
+    # Getting API Data
+    # Define the base URL of the API
+    base_url = "https://api.open-meteo.com/v1/forecast"
+
+    # Define the parameters as a dictionary
+    params = {
+        "latitude": "51.5085",
+        "longitude": "0.1257",
+        "hourly": "temperature_2m,precipitation",
+        "start_date": start_date,
+        "end_date": end_date
+        # Add more parameters as needed
+    }
+
+    # Make the API call using the requests library
+    response = requests.get(base_url, params=params)
+
+    # Check if the request was successful (status code 200)
+    if response.status_code == 200:
+        # Parse and work with the API response, which is typically in JSON format
+        api_data = response.json()["hourly"]
+        # Now you can work with the data returned by the API
+        api_data = pd.DataFrame(api_data)
+    else:
+        # If the request was not successful, handle the error
+        print(f"Error: {response.status_code}")
+        print(response.text)
+
+    api_data = api_data.rename(
+        columns={
+            "time": "weather_datetime",
+            "temperature_2m": "temp",
+            "precipitation": "precipitation",
+        }
+    )
+    api_data["weather_datetime"] = pd.to_datetime(api_data["weather_datetime"])
+
+    # Merging dataframes
+
+    df = data.merge(api_data, how="left", on="weather_datetime")
+    nanindf = df.isna().sum()
+
+    if nanindf.sum() > 0:
+        print(f"❌ NaN values in df - ERROR: {nanindf}")
+    else:
+        df["Patient ID"] = df["Patient ID"].astype("int")
+        return df
+
+
+def predict_add_weather_from_df(df):
+    df["weather_time"] = df["Appointment time"].str.split("-").str[0]
+    df["Appointment date"] = df["Appointment date"].astype("str")
+    df["weather_datetime"] = df["Appointment date"] + " " + df["weather_time"]
+    df["Appointment date"] = pd.to_datetime(df["Appointment date"])
+    df["weather_datetime"] = pd.to_datetime(df["weather_datetime"])
+    start_date = df["Appointment date"].dt.strftime("%Y-%m-%d").min()
+    end_date = df["Appointment date"].dt.strftime("%Y-%m-%d").max()
+
+    # Getting API Data
+    # Define the base URL of the API
+    base_url = "https://api.open-meteo.com/v1/forecast"
+
+    # Define the parameters as a dictionary
+    params = {
+        "latitude": "51.5085",
+        "longitude": "0.1257",
+        "hourly": "temperature_2m,precipitation",
+        "start_date": start_date,
+        "end_date": end_date
+        # Add more parameters as needed
+    }
+
+    # Make the API call using the requests library
+    response = requests.get(base_url, params=params)
+
+    # Check if the request was successful (status code 200)
+    if response.status_code == 200:
+        # Parse and work with the API response, which is typically in JSON format
+        api_data = response.json()["hourly"]
+        # Now you can work with the data returned by the API
+        api_data = pd.DataFrame(api_data)
+    else:
+        # If the request was not successful, handle the error
+        print(f"Error: {response.status_code}")
+        print(response.text)
+
+    api_data = api_data.rename(
+        columns={
+            "time": "weather_datetime",
+            "temperature_2m": "temp",
+            "precipitation": "precipitation",
+        }
+    )
+    api_data["weather_datetime"] = pd.to_datetime(api_data["weather_datetime"])
+
+    # Merging dataframes
+
+    df = df.merge(api_data, how="left", on="weather_datetime")
+    nanindf = df.isna().sum()
+
+    if nanindf.sum() > 0:
+        print(f"❌ NaN values in df - ERROR: {nanindf}")
+    else:
         df["Patient ID"] = df["Patient ID"].astype("int")
         return df
 
 
 def predict_add_global_register(df):
-
     register = pd.read_csv(f"{OUTPUT_DATA}/global_disease_register.csv", dtype="str")
     register["Patient ID"] = register["Patient ID"].astype("int")
     predict_df = df.merge(register, how="left", on="Patient ID")
@@ -158,7 +269,6 @@ def predict_feature_engineering(df):
         inplace=True,
     )
 
-
     # Filter rows where 'Registration status' is 'Current'
     df.drop(df[df["Registration status"] == "Deceased, Deducted"].index, inplace=True)
     df.drop(df[df["Registration status"] == "Deceased"].index, inplace=True)
@@ -173,7 +283,6 @@ def predict_feature_engineering(df):
     df["Appointment_time"] = df["Appointment_time"].astype("str")
     df["Appointment_time"] = df["Appointment_time"].str.split(":").str[0].astype(int)
 
-
     df["book_to_app_days"] = (
         df["Appointment date"] - df["Appointment booked date"]
     ).dt.total_seconds() / (60 * 60 * 24)
@@ -184,7 +293,6 @@ def predict_feature_engineering(df):
     df["booked_by_clinician"] = (df["Booked_by"] == df["Clinician"]).astype(int)
 
     df["Rota"] = df["Rota"].map(extract_rota_type)
-
 
     df["registered_for_months"] = (
         (pd.Timestamp.now() - df["Registration date"]).dt.total_seconds()
@@ -254,7 +362,6 @@ def predict_feature_engineering(df):
     )
     df.drop(cyclical_column, axis=1, inplace=True)
 
-
     df.drop(
         columns=[
             "Appointment booked date",
@@ -281,20 +388,15 @@ def predict_feature_engineering(df):
     df.reset_index(inplace=True, drop=True)
     post_drop = df.shape[0]
 
-
     pre_drop = df.shape[0]
     df.drop(df[df["book_to_app_days"] < 0].index, inplace=True)
     df.reset_index(inplace=True, drop=True)
     post_drop = df.shape[0]
 
-
-
     df = df[~df["Sex"].isin(["Indeterminate", "Unknown"])]
-
 
     le = LabelEncoder()
     df["Sex"] = le.fit_transform(df["Sex"])
-
 
     # OneHotEncode Rota
     ohe = OneHotEncoder(handle_unknown="ignore")
@@ -312,7 +414,6 @@ def predict_feature_engineering(df):
     df["Ethnicity category"] = df["Ethnicity category"].fillna("").astype(str)
     df["Ethnicity category"] = df["Ethnicity category"].apply(extract_ethnicity)
 
-
     # OneHotEncode Rota
     ohe = OneHotEncoder(handle_unknown="ignore")
     encoded = ohe.fit_transform(df[["Ethnicity category"]]).toarray()
@@ -324,7 +425,6 @@ def predict_feature_engineering(df):
     df = pd.concat([df, encoded_data], axis=1)
     # Drop the original column
     df = df.drop(["Ethnicity category"], axis=1)
-
 
     df.dropna(inplace=True)
 
@@ -340,19 +440,18 @@ def add_noshows(df):
     merged = merged.fillna(0)
     countout = merged.shape[0]
 
-
     return merged
 
 
 def test_predict(df):
     no_columns = df.shape[1]
     if no_columns != 37:
-        print("⛔️ TEST FAILEDm - df not 37 columns, inspect!")
-
+        print("⛔️ TEST FAILED - df not 37 columns, inspect!")
+        display(df)
 
 
 def get_appointment_info(surgery_prefix):
-    df = pd.read_csv(f"{PREDICT_DATA}/{surgery_prefix}_predict.csv")
+    df = pd.read_csv(f"{UPLOAD_FOLDER}/{surgery_prefix}_predict40.csv")
     pt_id = df[["Appointment Date", "Appointment time", "Patient ID"]]
     return pt_id
 
@@ -368,14 +467,20 @@ def make_predict():
 
 
 def streamlit_predict(surgery_prefix):
+    print("✅ streamlit_predict add weather")
     df = predict_add_weather(surgery_prefix=surgery_prefix)
+    print("✅ streamlit_predict add global register")
     df = predict_add_global_register(df)
+    print("✅ streamlit_predict add no shows")
     df = add_noshows(df)
+    print("✅ streamlit_predict feature Engineering")
     df = predict_feature_engineering(df)
     test_predict(df)
+    print("✅ streamlit_predict output DF")
     return df
 
-def streamlit_predict2(df, surgery_prefix):
+
+def streamlit_predict2(df):
     df = predict_add_weather_from_df(df)
     df = predict_add_global_register(df)
     df = add_noshows(df)

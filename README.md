@@ -108,7 +108,7 @@ The model was evaluated using stratified 10-fold cross-validation. Performance m
 The deep learning model achieved an AUC of 0.92 on the holdout test set. Precision was 93% and recall 96% using a probability threshold corresponding to the population DNA rate. The F1 score reached 0.98.
 
 This demonstrates significant predictive power, outperforming persistence models relying solely on past DNA rate. The model identified complex multivariate patterns in the data that drive DNA risk.
-
+![Neural Network Metrics](https://github.com/janduplessis883/project-showupforhealth/blob/master/images/NNmetrics.png?raw=true)
 Feature importance analysis found prior DNA history to be most impactful, aligning with previous studies. Distance to the surgery was also influential, suggesting transport barriers increase DNA risk. Weather factors like high temperatures were associated with lower DNA rates.
 
 These results confirm the value of including a breadth of data beyond traditional demographics and appointment details. The neural network approach proved capable of learning subtle predictive signals within the multidimensional dataset.

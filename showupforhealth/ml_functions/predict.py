@@ -446,8 +446,8 @@ def add_noshows(df):
 def test_predict(df):
     no_columns = df.shape[1]
     if no_columns != 37:
-        print("⛔️ TEST FAILED - df not 37 columns, inspect!")
-        display(df)
+        print("⛔️ TEST FAILED - df not 37 columns, inspect! ? Appointment_status column")
+        print(df)
 
 
 def get_appointment_info(surgery_prefix):

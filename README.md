@@ -113,6 +113,27 @@ Feature importance analysis found prior DNA history to be most impactful, aligni
 
 These results confirm the value of including a breadth of data beyond traditional demographics and appointment details. The neural network approach proved capable of learning subtle predictive signals within the multidimensional dataset.
 
+```
+epoch/accuracy	0.91787
+epoch/auc	0.92304
+epoch/cross entropy	0.18157
+epoch/epoch	79
+epoch/f1_score	0.95584
+epoch/learning_rate	0.001
+epoch/loss	0.18157
+epoch/prc	0.99167
+epoch/precision	0.93196
+epoch/recall	0.9813
+epoch/val_accuracy	0.96282
+epoch/val_auc	0.91402
+epoch/val_cross entropy	0.11919
+epoch/val_f1_score	0.98091
+epoch/val_loss	0.11919
+epoch/val_prc	0.99643
+epoch/val_precision	0.96638
+epoch/val_recall	0.99608
+```
+
 ### Potential Interventions
 
 A key goal of this project was guiding development of interventions to reduce DNAs. Predictions can be used to target reminder communications, transportation assistance, behavioral nudges to high-risk patients and overbooking of clinic with a high predicted DNA rate.

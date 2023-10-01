@@ -105,7 +105,7 @@ The model was evaluated using stratified 10-fold cross-validation. Performance m
 
 ### Results
 
-The deep learning model achieved an AUC of 0.91 on the holdout test set. Precision was 80.7% and recall 83% using a probability threshold corresponding to the population DNA rate. The F1 score reached 0.82.
+The deep learning model achieved an AUC of 0.92 on the holdout test set. Precision was 93% and recall 96% using a probability threshold corresponding to the population DNA rate. The F1 score reached 0.98.
 
 This demonstrates significant predictive power, outperforming persistence models relying solely on past DNA rate. The model identified complex multivariate patterns in the data that drive DNA risk.
 

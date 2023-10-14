@@ -24,9 +24,11 @@ train_data:
 app:
 	@streamlit run showupforhealth/interface/app.py
 
+app2:
+	@streamlit run showupforhealth/interface/app2.py
 
 predict:
-	python showupforhealth/interface/model_predict.py $(SURGERY_PREFIX)
+	python showupforhealth/interface/model_predict.py $(filter-out $@,$(MAKECMDGOALS)) 
 
 model_train:
 	python showupforhealth/interface/model_train.py

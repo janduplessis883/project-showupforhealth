@@ -18,6 +18,8 @@ import json
 import sys
 import os
 import base64
+import warnings
+warnings.filterwarnings('ignore')
 
 
 
@@ -53,7 +55,7 @@ class SurgeryPredictor:
                 f"Request to webhook failed: {response.status_code}, {response.text}"
             )
         else:
-            print(f"Successfully sent webhook")
+            print(f"🛜 Successfully sent webhook")
 
     def set_surgery(self):
         if self.surgery_prefix == 'ECS':
@@ -159,12 +161,11 @@ class SurgeryPredictor:
         ax.set_aspect("auto")
 
         # Save the plot to the local UPLOAD_FOLDER directory
-        plot_filename = f"{UPLOAD_FOLDER}/{self.surgery_prefix}_clinic_heatmap.png"
+        plot_filename = f"{UPLOAD_FOLDER}/{self.surgery_prefix}_clinic_HEATMAP.png"
         plt.savefig(plot_filename, bbox_inches='tight')  # bbox_inches='tight' helps to fit the plot
-
         # Show the plot (optional, if you still want to display it after saving)
         #plt.show()
-        print(f"💾 The heatmap has been saved as {plot_filename}")
+        print(f"💾🔥 Heatmap saved: {plot_filename}")
         return plot_filename
 
 
@@ -262,7 +263,6 @@ class SurgeryPredictor:
         print("\n👉 Original Class Labels")
         display(df)
 
-        
         surgery = pd.read_csv(f"{UPLOAD_FOLDER}/{self.surgery_prefix}_predict.csv")
 
         new = surgery.merge(df, on="Patient ID", how="left")
@@ -272,22 +272,37 @@ class SurgeryPredictor:
         new.drop(columns=["Appointment booked date", "Booked by"], inplace=True)
 
         new.sort_values(by=["Appointment date", "Appointment time"], inplace=True)
-        file_path = f"{UPLOAD_FOLDER}/{self.surgery_prefix}_prediction_output.csv"
-        new.to_csv(file_path, index=False)
-        print(f'💾 Prediction Output Saved to {UPLOAD_FOLDER}')
+        
+        # Merge with SMS List to get patient details
+        sms_allpts = pd.read_csv(f'{SMS_FOLDER}/{self.surgery_prefix}_smslist.csv', encoding='latin')
+        prediction_pts = new.merge(sms_allpts, on='Patient ID', how='left')
+        file_path = f"{UPLOAD_FOLDER}/{self.surgery_prefix}_prediction_OUTPUT.csv"
+        prediction_pts.to_csv(file_path, index=False)
+        print(f'💾🔮 Prediction Output saved ❌ Further work required: {UPLOAD_FOLDER}')
+        
+        accurx_list = prediction_pts[["NHS number", "Preferred telephone number", "Date of birth", "First name"]]
+        accurx_list.drop_duplicates(inplace=True)
+        accurx_path = f"{UPLOAD_FOLDER}/{self.surgery_prefix}_ACCURX_bulk_sms_list.csv"
+        accurx_list.to_csv(accurx_path, index=False)
+        print(f"💾📞 Accurx Bulk SMS List saved: {accurx_path}")
+        
         
         if 'Appointment status' in new.columns:
             unique_dna_no = new[['Appointment status']].value_counts()[1]
             self.unique_dna_no = int(unique_dna_no)
-        else:
-            pass
 
-        heatmap_path = self.clinic_heatmap(new)
+
+        heatmap_path = self.clinic_heatmap(prediction_pts)
         self.heatmap = self.make_base64(heatmap_path)
         
-        self.send_webhook()
-        return new
+        return prediction_pts
+    
+    def make_accurx_list(self, df):
+        sms_allpts = pd.read_csv(f'{SMS_FOLDER}/{self.surgery_prefix}_smslist.csv', encoding='latin')
+        sms = df.merge(sms_allpts, on='Patient ID', how='left')
+        accurx_list = sms[["NHS number", "Preferred telephone number", "Date of birth", "First name"]]
 
+        return accurx_list
 
 
 
@@ -302,6 +317,5 @@ if __name__ == "__main__":
     
     predictor = SurgeryPredictor()
     data = predictor.final_predict(surgery_prefix)
-    predictor.clinic_heatmap(data)
-
+    predictor.send_webhook()
 

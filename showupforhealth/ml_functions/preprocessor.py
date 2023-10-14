@@ -439,6 +439,21 @@ def feature_engineering(df):
     df = pd.concat([df, encoded_data], axis=1)
     # Drop the original column
     df = df.drop(["Ethnicity category"], axis=1)
+    
+    print(f"🔂🔴 OneHotEncode Surgery Name")
+    # OneHotEncode Rota
+    ohe = OneHotEncoder(handle_unknown="ignore")
+    encoded = ohe.fit_transform(df[["surgery"]]).toarray()
+    # Create feature names manually
+    feature_names = [f"surgery_{category}" for category in ohe.categories_[0]]
+    # Convert the encoded array back into a DataFrame
+    encoded_data = pd.DataFrame(encoded, columns=feature_names)
+    # Concatenate the original DataFrame and the encoded DataFrame
+    df = pd.concat([df, encoded_data], axis=1)
+    # Drop the original column
+    df = df.drop(["surgery"], axis=1)
+    print('⛔️ Drop surgery_nan column')
+    df = df.drop(columns=['surgery_nan'], axis=1)
 
     print(f"🔂 Drop NaN")
     df.dropna(inplace=True)

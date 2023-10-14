@@ -16,6 +16,8 @@ from showupforhealth.ml_functions.predict import *
 import requests
 import json
 import sys
+import os
+import base64
 
 
 
@@ -29,6 +31,7 @@ class SurgeryPredictor:
         self.scaler_no = ''
         self.select_threshold = ''
         self.unique_dna_no = 0
+        self.heatmap = ''
 
     def send_webhook(self):
         webhook_url = "https://eo6sfmvkbnp22n7.m.pipedream.net"
@@ -37,7 +40,9 @@ class SurgeryPredictor:
             "surgery_prefix": self.surgery_prefix,
             "model": self.scaler_no,
             "threshold": self.select_threshold,
-            "predicted_count": self.predicted_count
+            "predicted_count": self.predicted_count,
+            "unique_dna_no": self.unique_dna_no,
+            "heatmap": self.heatmap
         }
         response = requests.post(
             webhook_url, data=json.dumps(data),
@@ -57,6 +62,12 @@ class SurgeryPredictor:
             self.surgery = 'The Good Practice'
         elif self.surgery_prefix == 'SMW':
             self.surgery = 'Stanhope Mews West'
+        elif self.surgery_prefix == 'TCP':
+            self.surgery = 'The Chelsea Practice'
+        elif self.surgery_prefix == 'KMC':
+            self.surgery = 'Knightsbridge Medical Centre'
+        elif self.surgery_prefix == 'HPVM':
+            self.surgery = 'Health Partners Violet Melchett'
         else:
             self.surgery = ''
 
@@ -109,6 +120,12 @@ class SurgeryPredictor:
                 "Ethnicity_Mixed",
                 "Ethnicity_Other",
                 "Ethnicity_White",
+                "surgery_ECS",	
+                "surgery_HPVM",	
+                "surgery_KMC",	
+                "surgery_SMW",	
+                "surgery_TCP",	
+                "surgery_TGP",
             ]
         ]
         return new_df
@@ -146,17 +163,18 @@ class SurgeryPredictor:
         plt.savefig(plot_filename, bbox_inches='tight')  # bbox_inches='tight' helps to fit the plot
 
         # Show the plot (optional, if you still want to display it after saving)
-        plt.show()
-
-        print(f"The heatmap has been saved as {plot_filename}")
-
+        #plt.show()
+        print(f"💾 The heatmap has been saved as {plot_filename}")
+        return plot_filename
 
 
     def scaler_model_predict(self, df):
-        print(Fore.GREEN + "\n*️⃣ Select Scaler + Model:")
-        print(Fore.GREEN + "1. Jan-Model-128-256-16-32-16Sept23")
-        print(Fore.GREEN + "2. Jan-Backup-128-256-16-32-22Sept23")
-        print(Fore.GREEN + "3. Experiment-256-512-16-32-undersample-0.15")
+        print(Fore.GREEN + "\n👉 Select Scaler + Model:")
+        print(Fore.GREEN + "1. ❌Jan-Model-128-256-16-32-16Sept23")
+        print(Fore.GREEN + "2. ❌Jan-Backup-128-256-16-32-22Sept23")
+        print(Fore.GREEN + "3. ❌Experiment-256-512-16-32-undersample-0.15")
+        print(Fore.GREEN + "4. model_youthfull_darkness_9oct23")
+        print(Fore.GREEN + "5. model_9oct23_3")
         
         self.scaler_no = input(Fore.RED + "Enter Selection: ")
 
@@ -165,13 +183,17 @@ class SurgeryPredictor:
         scaler_path = {
             "1": "jan_scaler_17sept23.pkl",
             "2": "jan_scaler_22sept239am1664.pkl",
-            "3": "jan_scaler_22sept239am1664.pkl"
+            "3": "jan_scaler_22sept239am1664.pkl",
+            "4": "jan_scaler_9oct23.pkl",
+            "5": "jan_scaler_9oct23_3.pkl"
         }
         
         model_path = {
             "1": "model16sept23_jan.h5",
             "2": "model_weights_9am16642023-09-22 09-01-10.h5",
-            "3": "model_weights_gentle_water2023-09-22 10-37-13.h5"
+            "3": "model_weights_gentle_water2023-09-22 10-37-13.h5",
+            "4": "model_youthfull_darkness_9oct23.h5",
+            "5": "model_9oct23_3.h5"
         }
 
         if self.scaler_no in scaler_path:
@@ -217,6 +239,12 @@ class SurgeryPredictor:
         # print("-- Unique Predicted No Shows --------------------------")
         print(f"⛔️ Duplicates Dropped: {count_dup}")
         return unique_no_snows
+    
+    def make_base64(self, image_path):
+        with open(image_path, "rb") as image_file:
+            base64_image = base64.b64encode(image_file.read()).decode()
+        
+        return base64_image
 
     def final_predict(self, new_surgery_prefix):
         self.surgery_prefix = new_surgery_prefix
@@ -225,16 +253,17 @@ class SurgeryPredictor:
         X_temp = streamlit_predict(self.surgery_prefix)
         X_new = X_temp.drop(columns="Patient ID")
         pt_id = X_temp[["Patient ID"]]
-        print("✅ scaler_model_predict")
+
         predictions = self.scaler_model_predict(X_new)
-        print("✅ Display Threshold Info")
+
         class_labels = self.display_threshold_info(predictions)
-        print("✅ display Outcome DF")
+        print("✅ Finished Pre-processing")
         df = self.display_outcome_df(class_labels, pt_id)
-        print("*️⃣ Original Class Labels")
+        print("\n👉 Original Class Labels")
+        display(df)
 
         
-        surgery = pd.read_csv(f"{UPLOAD_FOLDER}/{self.surgery_prefix}_predict40.csv")
+        surgery = pd.read_csv(f"{UPLOAD_FOLDER}/{self.surgery_prefix}_predict.csv")
 
         new = surgery.merge(df, on="Patient ID", how="left")
         new["Model_Prediction"] = new["Model_Prediction"].replace(0.0, "Predicted DNA")
@@ -243,8 +272,18 @@ class SurgeryPredictor:
         new.drop(columns=["Appointment booked date", "Booked by"], inplace=True)
 
         new.sort_values(by=["Appointment date", "Appointment time"], inplace=True)
+        file_path = f"{UPLOAD_FOLDER}/{self.surgery_prefix}_prediction_output.csv"
+        new.to_csv(file_path, index=False)
+        print(f'💾 Prediction Output Saved to {UPLOAD_FOLDER}')
+        
+        if 'Appointment status' in new.columns:
+            unique_dna_no = new[['Appointment status']].value_counts()[1]
+            self.unique_dna_no = int(unique_dna_no)
+        else:
+            pass
 
-        new.to_csv(f"{UPLOAD_FOLDER}/{self.surgery_prefix}_prediction_output.csv", index=False)
+        heatmap_path = self.clinic_heatmap(new)
+        self.heatmap = self.make_base64(heatmap_path)
         
         self.send_webhook()
         return new
@@ -253,13 +292,15 @@ class SurgeryPredictor:
 
 
 if __name__ == "__main__":
-    predictor = SurgeryPredictor()
-    
     if len(sys.argv) > 1:
         surgery_prefix = sys.argv[1]
     else:
-        surgery_prefix = "ECS"
+        surgery_prefix = "SMW"
         
+    filepath = f"{UPLOAD_FOLDER}/{surgery_prefix}_predict.csv"
+    assert os.path.exists(filepath), f"The file {filepath} does not exist." 
+    
+    predictor = SurgeryPredictor()
     data = predictor.final_predict(surgery_prefix)
     predictor.clinic_heatmap(data)
 

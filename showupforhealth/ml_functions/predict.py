@@ -11,7 +11,51 @@ from sklearn.preprocessing import OneHotEncoder
 
 
 def predict_add_weather(surgery_prefix):
-    data = pd.read_csv(f"{UPLOAD_FOLDER}/{surgery_prefix}_predict40.csv")
+    data = pd.read_csv(f"{UPLOAD_FOLDER}/{surgery_prefix}_predict.csv")
+    
+    if surgery_prefix == 'ECS':
+        data['surgery_ECS'] = 1
+        data['surgery_HPVM'] = 0
+        data['surgery_KMC'] = 0
+        data['surgery_SMW'] = 0
+        data['surgery_TCP'] = 0
+        data['surgery_TGP'] = 0
+    elif surgery_prefix == 'HPVM':
+        data['surgery_ECS'] = 0
+        data['surgery_HPVM'] = 1
+        data['surgery_KMC'] = 0
+        data['surgery_SMW'] = 0
+        data['surgery_TCP'] = 0
+        data['surgery_TGP'] = 0
+    elif surgery_prefix == 'KMC':
+        data['surgery_ECS'] = 0
+        data['surgery_HPVM'] = 0
+        data['surgery_KMC'] = 1
+        data['surgery_SMW'] = 0
+        data['surgery_TCP'] = 0
+        data['surgery_TGP'] = 0
+    elif surgery_prefix == 'SMW':
+        data['surgery_ECS'] = 0
+        data['surgery_HPVM'] = 0
+        data['surgery_KMC'] = 0
+        data['surgery_SMW'] = 1
+        data['surgery_TCP'] = 0
+        data['surgery_TGP'] = 0
+    elif surgery_prefix == 'TCP':
+        data['surgery_ECS'] = 0
+        data['surgery_HPVM'] = 0
+        data['surgery_KMC'] = 0
+        data['surgery_SMW'] = 0
+        data['surgery_TCP'] = 1
+        data['surgery_TGP'] = 0
+    elif surgery_prefix == 'TGP':
+        data['surgery_ECS'] = 0
+        data['surgery_HPVM'] = 0
+        data['surgery_KMC'] = 0
+        data['surgery_SMW'] = 0
+        data['surgery_TCP'] = 0
+        data['surgery_TGP'] = 1
+   
 
     data["weather_time"] = data["Appointment time"].str.split("-").str[0]
     data["weather_datetime"] = data["Appointment date"] + " " + data["weather_time"]
@@ -446,12 +490,12 @@ def add_noshows(df):
 def test_predict(df):
     no_columns = df.shape[1]
     if no_columns != 37:
-        print("⛔️ TEST FAILED - df not 37 columns, inspect! ? Appointment_status column")
-        print(df)
+        print("⛔️ TEST FAILED - df not 37 columns, inspect! ? Appointment_status column1")
+        display(df.head())
 
 
 def get_appointment_info(surgery_prefix):
-    df = pd.read_csv(f"{UPLOAD_FOLDER}/{surgery_prefix}_predict40.csv")
+    df = pd.read_csv(f"{UPLOAD_FOLDER}/{surgery_prefix}_predict.csv")
     pt_id = df[["Appointment Date", "Appointment time", "Patient ID"]]
     return pt_id
 

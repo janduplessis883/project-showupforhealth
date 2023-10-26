@@ -36,6 +36,12 @@ model_train:
 real_predict:
 	python showupforhealth/interface/main.py
 
+predict_folder:
+	python showupforhealth/interface/model_predict_folder.py $(filter-out $@,$(MAKECMDGOALS)) 
+
+predict_testall:
+	python showupforhealth/interface/model_predict_folder_test.py 
+
 test:
 	@pytest
 

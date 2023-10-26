@@ -63,7 +63,7 @@ UPLOAD_FOLDER = os.path.join(
     "janduplessis883",
     "data-showup",
     "uploads",
-    "2023 Week 42 - 16 Oct to 22 Oct",
+    "2023 Week 40 - 01 Oct to 07 Oct",
 )
 
 SMS_FOLDER = os.path.join(

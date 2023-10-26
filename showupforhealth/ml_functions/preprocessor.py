@@ -439,7 +439,7 @@ def feature_engineering(df):
     df = pd.concat([df, encoded_data], axis=1)
     # Drop the original column
     df = df.drop(["Ethnicity category"], axis=1)
-    
+
     print(f"🔂🔴 OneHotEncode Surgery Name")
     # OneHotEncode Rota
     ohe = OneHotEncoder(handle_unknown="ignore")
@@ -452,8 +452,8 @@ def feature_engineering(df):
     df = pd.concat([df, encoded_data], axis=1)
     # Drop the original column
     df = df.drop(["surgery"], axis=1)
-    print('⛔️ Drop surgery_nan column')
-    df = df.drop(columns=['surgery_nan'], axis=1)
+    print("⛔️ Drop surgery_nan column")
+    df = df.drop(columns=["surgery_nan"], axis=1)
 
     print(f"🔂 Drop NaN")
     df.dropna(inplace=True)

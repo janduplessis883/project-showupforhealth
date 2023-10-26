@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import io
 
+
 def main():
     st.title("CSV Upload Example with Progress Bar")
 
@@ -9,7 +10,7 @@ def main():
     if uploaded_file is not None:
         # To show progress bar
         progress_bar = st.progress(0)
-        
+
         # Create a buffer to hold chunks of the uploaded file
         buffer = io.BytesIO()
         chunk_size = 8  # 8KB chunks
@@ -26,9 +27,10 @@ def main():
         # Rewind the buffer to the beginning and read into a DataFrame
         buffer.seek(0)
         df = pd.read_csv(buffer)
-        
+
         # Display DataFrame
         st.write(df)
+
 
 if __name__ == "__main__":
     main()

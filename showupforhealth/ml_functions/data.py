@@ -20,7 +20,7 @@ def create_global_appointments_list(
             app = pd.read_csv(
                 f"{RAW_DATA}/{surgery_prefix}/{surgery_prefix}_APP{i}.csv"
             )
-            app['surgery'] = f'{surgery_prefix}'
+            app["surgery"] = f"{surgery_prefix}"
             print(f"df {i} ", end=" ")
             df_list.append(app)
 
